@@ -8,15 +8,15 @@ class Jeu:
         self.title = title
         self.width = width
         self.height = height
+
         self.sudoku = Sudoku(3)
 
         self.running = True
 
-        pygame.init()
-        pygame.display.set_caption(title)
-        self.screen = pygame.display.set_mode((1080,720))
-        self.sysfont = pygame.font.get_default_font()
-
+        pygame.init() #initalisation
+        pygame.display.set_caption(title) # Mettre le titre sur Iai-sudoku <3
+        self.screen = pygame.display.set_mode((1080,720)) # Resize la fenêtre
+        self.sysfont = pygame.font.get_default_font() # initialisaiton des font (c'est pour le texte)
         self.background = pygame.image.load('ressources/sakuraBackground.jpg')
 
         self.font = pygame.font.SysFont(self.sysfont, 72)
@@ -35,15 +35,20 @@ class Jeu:
         pass
 
     def render(self):
+
+        
         self.screen.blit(self.background, (0,0))
         self.screen.blit(self.img, (100, 100))
         self.buttonPlay.render(self.screen)
+
         pygame.display.flip()
     
     def quit(self):
         pygame.display.quit()
         pygame.quit()
-            
+    
+    def init(self):
+
 
 
 
