@@ -55,7 +55,51 @@ class Sudoku:
                                         return True
                 break
         self.grille[row][col]=0
-    
+
+    def isValide(self):
+        etat = True
+        for l in range(len(self.grille)):
+            for c in range(len(self.grille[l])):
+                target = self.grille[l][c]
+                if self.grille[l].count(target) > 1:
+                    etat = False
+                checkColonne = []
+                for iLigne in range(len(self.grille)):
+                    checkColonne.append(self.grille[iLigne][c])
+                if checkColonne.count(target) > 1:
+                    etat = False
+                square = []
+                tier = len(self.grille) // 3
+                tierdouble = (len(self.grille) // 3) * 2
+                entier = len(self.grille)
+                if l < tier:
+                    if c < tier:
+                        square = [self.grille[i][0:tier] for i in range(0, tier)]
+                    elif c < tierdouble:
+                        square = [self.grille[i][tier:tierdouble] for i in range(0, tier)]
+                    else:
+                        square = [self.grille[i][tierdouble:entier] for i in range(0, tier)]
+                elif l < tierdouble:
+                    if c < tier:
+                        square = [self.grille[i][0:tier] for i in range(tier, tierdouble)]
+                    elif c < tierdouble:
+                        square = [self.grille[i][tier:tierdouble] for i in range(tier, tierdouble)]
+                    else:
+                        square = [self.grille[i][tierdouble:entier] for i in range(tier, tierdouble)]
+                else:
+                    if c < tier:
+                        square = [self.grille[i][0:tier] for i in range(tierdouble, entier)]
+                    elif c < tierdouble:
+                        square = [self.grille[i][tier:tierdouble] for i in range(tierdouble, entier)]
+                    else:
+                        square = [self.grille[i][tierdouble:entier] for i in range(tierdouble, entier)]
+                bloc = (square[0] + square[1] + square[2])
+                if target in bloc:
+                    bloc.remove(target)
+                    if target in bloc:
+                        etat = False
+        return etat
+
     def afficher(self):
         def interligne(taille):
             for i in range(0,taille):
