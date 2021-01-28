@@ -11,6 +11,7 @@ class Jeu:
         self.height = height
 
         self.sudoku = Sudoku(3)
+        self.sudoku.afficher()
 
         self.running = True
 
