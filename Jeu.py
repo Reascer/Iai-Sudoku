@@ -11,7 +11,9 @@ class Jeu:
         self.height = height
 
         self.sudoku = Sudoku(3)
+        self.sudoku.load('grille.txt')
         self.sudoku.afficher()
+        #self.sudoku.save('grille.txt')  --> Faudrait demander un nom au user, puis le reafficher dans une liste ensuite
 
         self.running = True
 
