@@ -171,7 +171,7 @@ class Sudoku:
 
     def event(self,event):
         for case in self.cases:
-            action = element.eventElmt(event)
+            action = case.eventElmt(event)
             if not action == None:
                 return action
     
