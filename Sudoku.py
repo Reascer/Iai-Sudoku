@@ -165,3 +165,30 @@ class Sudoku:
             case.render(screen)
 
     
+    def load(self, path):
+        with open(path, mode="r") as fichier:
+            # Les etapes en lecture sur le fichier
+            content = fichier.read()
+            if content == "":
+                print("Il n'y a rien a charger.")
+            else:
+                i = 0
+                for l in range(len(self.grille)):
+                    for c in range(len(self.grille)):
+                        if content[i] == "-":
+                            self.grille[l][c] = -int(content[i + 1])
+                            i += 2
+                        else:
+                            self.grille[l][c] = int(content[i])
+                            i += 1
+            fichier.close()
+
+    def save(self, path):
+        with open(path, mode="w") as fichier:
+            # Les etapes en ecriture sur le fichier
+            content = ""
+            for l in range(len(self.grille)):
+                for c in range(len(self.grille)):
+                    content += str(self.grille[l][c])
+            fichier.write(content)
+            fichier.close()
