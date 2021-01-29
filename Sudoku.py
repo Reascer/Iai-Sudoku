@@ -1,12 +1,46 @@
-from random import shuffle
+from random import shuffle,sample
+import pygame
+import element as elmt
 
 class Sudoku:
     def __init__(self, base):
         self.base = base
-        taille = base * base
-        self.grille = [[0 for colone in range(0,taille)] for ligne in range(0,taille)]
+        self.taille = base * base
+        self.grille = [[0 for colone in range(0,self.taille)] for ligne in range(0,self.taille)]
         self.number = ['1','2','3','4','5','6','7','8','9']
         self.remplissage()
+        self.vidage(3//4)
+
+        self.cases = []
+        x = 0
+        y = 0
+        for i in range(0,self.taille * self.taille ):
+            if x > 0:
+                x = x - 1
+            if i % 3 == 0:
+                x = x + 2
+            case = elmt.element(x,y)
+            self.font = pygame.font.SysFont("comicsansms", 24)
+            case.setTexture(pygame.Surface((40,40),pygame.SRCALPHA))
+            case.setText(self.font.render(self.grilleDeJeu[i//9][i%9], True,(0,0,255)))
+            pygame.draw.rect(case.texture,(0,0,255,255),(0,0,40,40),width=1)
+            case.clickable = True
+            case.action = "change"
+            self.cases.append(case)
+            x = x + 40
+            if i % 9 == 8:
+                y = y + 40
+                if y > 0:
+                    y = y - 1
+                if i // 9 % 3 == 2:
+                    y = y + 2
+                x = 0
+
+    def vidage(self,fraction):
+        self.grilleDeJeu = self.grille
+        empties = 81 * 3//4
+        for p in sample(range(81),empties):
+           self.grilleDeJeu[p//9][p%9] = ' '
 
     def checkgrille(self):
         for row in range(0,9):
@@ -125,4 +159,9 @@ class Sudoku:
 
             if ligne == self.base*self.base-1:
                 interligne(len(self.grille[colone]))
+
+    def render(self,screen):
+        for case in self.cases :
+            case.render(screen)
+
     

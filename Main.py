@@ -1,11 +1,13 @@
 from Jeu import *
 
 
-jeu = Jeu("Iai-sudoku",0.75,0.75)
+jeu = Jeu("Iai-sudoku",1080,720)
 
 while jeu.running:
     jeu.event()
     jeu.update()
+    if jeu.running == False:
+        break
     jeu.render()
 
 
