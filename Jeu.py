@@ -40,6 +40,8 @@ class Jeu:
                 action = self.subMenu.event(event)                
                 if action == 'Jouer':
                     self.layoutEnCours = "Jeu"
+                if action == 'Charger':
+                    self.sudoku.loadMenu()
             
     def update(self):
         pass
