@@ -2,7 +2,7 @@ import pygame
 import element as elmt
 import elementManager as elmtManager
 from Sudoku import Sudoku
-
+import Layout as Lyt
 
 class Jeu:
     def __init__(self,title,width,height):
@@ -30,19 +30,25 @@ class Jeu:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.quit()
-            action = self.buttonManager.EventElements(event)
-            if action == 'quitter':
-                self.quit()
-                
-
+            if self.layoutEnCours == "titleScreen":
+                action = self.titleScreen.event(event)
+                if action == 'quitter':
+                    self.quit()
+                if action == 'Jouer':
+                    self.layoutEnCours = "Jeu"
+            
     def update(self):
         pass
 
     def render(self):
         self.backgroundManager.renderElements(self.screen)
-        self.textManager.renderElements(self.screen)
-        self.buttonManager.renderElements(self.screen)
-        self.sudoku.render(self.screen)
+        if self.layoutEnCours == 'Jeu':
+            self.sudoku.render(self.screen)
+
+        if self.layoutEnCours == "titleScreen":
+            self.titleScreen.render(self.screen)
+
+        
 
         pygame.display.flip()
     
@@ -54,8 +60,8 @@ class Jeu:
     #Ajouter les elements dans l'initRender
     def initRender(self):
         self.backgroundManager = elmtManager.elementManager()
-        self.textManager = elmtManager.elementManager()
-        self.buttonManager = elmtManager.elementManager()
+        textManager = elmtManager.elementManager()
+        buttonManager = elmtManager.elementManager()
 
         #====================== element a ajouter ===========================
         titleBackground = elmt.element(0,0,"sakuraBackground.jpg")
@@ -64,21 +70,23 @@ class Jeu:
 
         Menutitle = elmt.element(100,100)
         Menutitle.setTexture(self.font.render('Iai-sudoku', True,(0,0,0))) # pour les parametres: le text , je sais plus mais true du coup , la couleur du text en RGB
-        self.textManager.elements.append(Menutitle)
+        textManager.elements.append(Menutitle)
 
         buttonPlay = elmt.element(100,400,"button.png")
         buttonPlay.setText(self.font.render('Play', True,(0,0,0)))
         buttonPlay.clickable = True
-        buttonPlay.action = "Menu"
-        self.buttonManager.addElement(buttonPlay)
+        buttonPlay.action = "Jouer"
+        buttonManager.addElement(buttonPlay)
 
         buttonQuitter = elmt.element(500,400,"button.png")
         buttonQuitter.setText(self.font.render('Quitter', True,(0,0,0)))
         buttonQuitter.clickable = True
         buttonQuitter.action = "quitter"
-        self.buttonManager.addElement(buttonQuitter)
+        buttonManager.addElement(buttonQuitter)
 
         #=====================================================================
 
-
-
+        self.titleScreen = Lyt.Layout()
+        self.titleScreen.addElmtManager(buttonManager)
+        self.titleScreen.addElmtManager(textManager)
+        
