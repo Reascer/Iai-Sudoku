@@ -11,9 +11,13 @@ class Sudoku:
         self.remplissage()
         self.vidage(3//4)
 
+
+        self.backgroundGrille = elmt.element(0,0,"case.png")
+        self.backgroundGrille.setTexture(pygame.transform.scale(self.backgroundGrille.texture,(440,440)))
+        self.backgroundGrille.setPosition(540 - self.backgroundGrille.texture_rect.centerx,360 - self.backgroundGrille.texture_rect.centery)
         self.cases = []
-        x = 0
-        y = 0
+        x = self.backgroundGrille.texture_rect.x+40
+        y = self.backgroundGrille.texture_rect.y+40
         for i in range(0,self.taille * self.taille ):
             if x > 0:
                 x = x - 1
@@ -22,8 +26,8 @@ class Sudoku:
             case = elmt.element(x,y)
             self.font = pygame.font.SysFont("comicsansms", 24)
             case.setTexture(pygame.Surface((40,40),pygame.SRCALPHA))
-            case.setText(self.font.render(self.grilleDeJeu[i//9][i%9], True,(0,0,255)))
-            pygame.draw.rect(case.texture,(0,0,255,255),(0,0,40,40),width=1)
+            case.setText(self.font.render(self.grilleDeJeu[i//9][i%9], True,(255,255,255)))
+            pygame.draw.rect(case.texture,(120,120,255,255),(0,0,40,40),width=1)
             case.clickable = True
             case.action = "change"
             self.cases.append(case)
@@ -34,7 +38,7 @@ class Sudoku:
                     y = y - 1
                 if i // 9 % 3 == 2:
                     y = y + 2
-                x = 0
+                x = self.backgroundGrille.texture_rect.x + 40
 
     def vidage(self,fraction):
         self.grilleDeJeu = self.grille
@@ -161,9 +165,15 @@ class Sudoku:
                 interligne(len(self.grille[colone]))
 
     def render(self,screen):
+        self.backgroundGrille.render(screen)
         for case in self.cases :
             case.render(screen)
 
+    def event(self,event):
+        for case in self.cases:
+            action = element.eventElmt(event)
+            if not action == None:
+                return action
     
     def load(self, path):
         with open(path, mode="r") as fichier:
