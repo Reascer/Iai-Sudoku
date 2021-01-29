@@ -1,6 +1,7 @@
 from random import shuffle,sample
 import pygame
 import element as elmt
+from tkinter import filedialog, Tk
 
 class Sudoku:
     def __init__(self, base):
@@ -168,6 +169,12 @@ class Sudoku:
         self.backgroundGrille.render(screen)
         for case in self.cases :
             case.render(screen)
+
+    def loadMenu(self):
+        root = Tk()
+        root.withdraw()
+        self.load(filedialog.askopenfilename(initialdir = "./", filetypes=(("Fichier Grille", ".txt"), ('Tout Fichier', "*.*"))))
+        return True
 
     def event(self,event):
         for case in self.cases:
