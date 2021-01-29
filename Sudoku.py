@@ -170,13 +170,15 @@ class Sudoku:
         for case in self.cases :
             case.render(screen)
 
-    root = Tk()
-
     def loadMenu(self):
-        self.load(filedialog.askopenfilename(filetypes=(("Fichier Grille", ".txt"), ('Tout Fichier', "*.*"))))
+        root = Tk()
+        root.withdraw()
+        self.load(filedialog.askopenfilename(initialdir = "./", filetypes=(("Fichier Grille", ".txt"), ('Tout Fichier', "*.*"))))
+        return True
+
     def event(self,event):
         for case in self.cases:
-            action = element.eventElmt(event)
+            action = self.element.eventElmt(event)
             if not action == None:
                 return action
     

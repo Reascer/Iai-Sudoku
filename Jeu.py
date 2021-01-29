@@ -41,7 +41,9 @@ class Jeu:
                 if action == 'Jouer':
                     self.layoutEnCours = "Jeu"
                 if action == 'Charger':
-                    self.sudoku.loadMenu()
+                    ok = self.sudoku.loadMenu()
+                    if ok == True:
+                        self.layoutEnCours = "Jeu"
             
     def update(self):
         pass

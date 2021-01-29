@@ -1,6 +1,5 @@
 from Jeu import *
 
-
 jeu = Jeu("Iai-sudoku",1080,720)
 
 while jeu.running:
@@ -9,5 +8,3 @@ while jeu.running:
     if jeu.running == False:
         break
     jeu.render()
-
-
