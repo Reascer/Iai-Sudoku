@@ -26,7 +26,7 @@ class Sudoku:
         self.cases = []
         x = self.backgroundGrille.texture_rect.x+40
         y = self.backgroundGrille.texture_rect.y+40
-        for i in range(0,self.taille * self.taille ):
+        for i in range(0,self.taille * self.taille):
             if x > 0:
                 x = x - 1
             if i % 3 == 0:
