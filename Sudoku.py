@@ -49,7 +49,7 @@ class Sudoku:
                 x = self.backgroundGrille.texture_rect.x + 40
 
     def vidage(self,fraction):
-        empties = 81 * 2//3
+        empties = 81 * 3//5
         for p in sample(range(81),empties):
            self.grilleDeJeu[p//9][p%9] = ' '
 
@@ -178,7 +178,7 @@ class Sudoku:
             case.render(screen)
     
     def event(self,event):
-        if event.type == pygame.KEYDOWN: 
+        if event.type == pygame.KEYDOWN:
             if pygame.key.name(event.key) == "escape":
                 for case in self.cases :
                     case.clickState = False
@@ -189,12 +189,14 @@ class Sudoku:
                     pygame.draw.rect(case.texture,(255,120,120,255),(1,1,38,38),width=1)
                     if event.type == pygame.KEYDOWN:
                         if pygame.key.name(event.key) in ("[1]","[2]","[3]","[4]","[5]","[6]","[7]","[8]","[9]","backspace"):
-                            if pygame.key.name(event.key) == "backspace":
+                            if pygame.key.name(event.key) == ("backspace"):
                                 self.grilleDeJeu[case.action[0]][case.action[1]] = ' '
                                 case.setText(self.font.render(' ', True,(120,120,120)))
+                                case.clickState = False
                             else:    
                                 self.grilleDeJeu[case.action[0]][case.action[1]] = pygame.key.name(event.key)[1]
                                 case.setText(self.font.render(pygame.key.name(event.key)[1], True,(120,120,120)))
+                                case.clickState = False
                 else:
                     pygame.draw.rect(case.texture,(0,0,0,0),(1,1,38,38),width=1)
                 if case.texture_rect.collidepoint(pygame.mouse.get_pos()):
@@ -217,7 +219,7 @@ class Sudoku:
             # Les etapes en lecture sur le fichier
             content = fichier.read()
             if content == "":
-                print("Il n'y a rien a charger.")
+                print("Chargement Impossible")
             else:
                 i = 0
                 for l in range(len(self.grille)):
