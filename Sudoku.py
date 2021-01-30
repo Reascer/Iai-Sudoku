@@ -16,6 +16,9 @@ class Sudoku:
         self.backgroundGrille = elmt.element(0,0,"case.png")
         self.backgroundGrille.setTexture(pygame.transform.scale(self.backgroundGrille.texture,(440,440)))
         self.backgroundGrille.setPosition(540 - self.backgroundGrille.texture_rect.centerx,360 - self.backgroundGrille.texture_rect.centery)
+        self.initRender()
+    
+    def initRender(self):
         self.cases = []
         x = self.backgroundGrille.texture_rect.x+40
         y = self.backgroundGrille.texture_rect.y+40
@@ -193,11 +196,13 @@ class Sudoku:
                 for l in range(len(self.grille)):
                     for c in range(len(self.grille)):
                         if content[i] == "-":
-                            self.grille[l][c] = -int(content[i + 1])
+                            self.grille[l][c] = -content[i + 1]
                             i += 2
                         else:
-                            self.grille[l][c] = int(content[i])
+                            self.grille[l][c] = content[i]
                             i += 1
+            self.grilleDeJeu = self.grille
+            self.initRender()
             fichier.close()
 
     def save(self, path):
@@ -209,3 +214,8 @@ class Sudoku:
                     content += str(self.grille[l][c])
             fichier.write(content)
             fichier.close()
+
+    def __del__(self):
+        self.grille = []
+        self.grilleDeJeu = []   
+        self.cases = []
