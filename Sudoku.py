@@ -7,7 +7,7 @@ class Sudoku:
     def __init__(self, base):
         self.base = base
         self.taille = base * base
-        self.grille = [[0 for colone in range(0,self.taille)] for ligne in range(0,self.taille)]
+        self.grille = [[0 for colonne in range(0,self.taille)] for ligne in range(0,self.taille)]
         self.number = ['1','2','3','4','5','6','7','8','9']
         self.remplissage()
         self.vidage(3//4)
@@ -151,19 +151,19 @@ class Sudoku:
             if ligne % self.base == 0:
                 interligne(len(self.grille[ligne]))
 
-            for colone in range(0,len(self.grille[ligne])):
-                if colone % self.base == 0:
+            for colonne in range(0,len(self.grille[ligne])):
+                if colonne % self.base == 0:
                     print("|", end=' ')
-                if self.grille[ligne][colone] == 0:
+                if self.grille[ligne][colonne] == 0:
                     print(0, end=' ')
                 else:
-                    print(self.grille[ligne][colone], end=' ')
+                    print(self.grille[ligne][colonne], end=' ')
 
-                if colone == len(self.grille[ligne])-1:
+                if colonne == len(self.grille[ligne])-1:
                     print("|")
 
             if ligne == self.base*self.base-1:
-                interligne(len(self.grille[colone]))
+                interligne(len(self.grille[colonne]))
 
     def render(self,screen):
         self.backgroundGrille.render(screen)
@@ -173,7 +173,7 @@ class Sudoku:
     def loadMenu(self):
         root = Tk()
         root.withdraw()
-        self.load(filedialog.askopenfilename(initialdir = "./", filetypes=(("Fichier Grille", ".txt"), ('Tout Fichier', "*.*"))))
+        self.load(filedialog.askopenfilename(initialdir = "./", filetypes=(("Fichier Grille", ".txt"), ('Tous Fichiers', "*.*"))))
         return True
 
     def event(self,event):
