@@ -2,9 +2,12 @@ import pygame
 
 class element:
     def __init__(self,pos_x,pos_y,textureName=None):
+        self.alphaClickable = True
         self.clickable = False
         self.text = None
         self.action = None
+        self.clickState = False
+        self.clickStateToggle = False
         self.texture_rect = pygame.Rect(pos_x,pos_y,0,0)
         if textureName is not None:
             self.texture = pygame.image.load("ressources/" + textureName)
@@ -19,9 +22,17 @@ class element:
                 if pygame.mouse.get_pressed(3)[0] == True:
                     if self.texture_rect.collidepoint(event.pos):
                         mouse_pos = (event.pos[0] - self.texture_rect.x , event.pos[1] - self.texture_rect.y)
-                        if not self.texture.get_at(mouse_pos)[3] == 0:
+                        if not self.texture.get_at(mouse_pos)[3] == 0 or not self.alphaClickable:
                             print("click !")
+                            if self.clickStateToggle:
+                                if not self.clickState:
+                                    self.clickState = True
+                                else:
+                                    self.clickState = False
+                            else:
+                                self.clickState = True
                             return self.action
+                        
             
 
     def render(self,screen):
