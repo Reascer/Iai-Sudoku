@@ -45,6 +45,11 @@ class Jeu:
                     if ok == True:
                         self.layoutEnCours = "Jeu"
             if self.layoutEnCours == "Jeu":
+                action = self.jeuLayout.event(event)
+                if action == 'Verif':
+                    self.sudoku.isFinish()
+                if not self.running:
+                    return True
                 self.sudoku.event(event)
             
     def update(self):
@@ -53,7 +58,9 @@ class Jeu:
     def render(self):
         if self.layoutEnCours == 'Jeu':
             self.backgroundManager.renderElements(self.screen,1)
+            self.jeuLayout.render(self.screen)
             self.sudoku.render(self.screen)
+
 
         if self.layoutEnCours == "titleScreen":
             self.backgroundManager.renderElements(self.screen,0)
@@ -78,6 +85,7 @@ class Jeu:
         textManager = elmtManager.elementManager()
         buttonManager = elmtManager.elementManager()
         buttonManagerSub = elmtManager.elementManager()
+        buttonManagerJeu = elmtManager.elementManager()
 
         #====================== element a ajouter ===========================
         
@@ -99,12 +107,14 @@ class Jeu:
         buttonPlay.setText(self.font.render('Play', True,(0,0,0)))
         buttonPlay.clickable = True
         buttonPlay.action = "SubMenu"
+        buttonPlay.hoverable = True
         buttonManager.addElement(buttonPlay)
 
         buttonQuitter = elmt.element(600,400,"button.png")
         buttonQuitter.setText(self.font.render('Quitter', True,(0,0,0)))
         buttonQuitter.clickable = True
         buttonQuitter.action = "Quitter"
+        buttonQuitter.hoverable = True
         buttonManager.addElement(buttonQuitter)
         
         #====================== Bouttons Sous Menu ===========================
@@ -113,19 +123,35 @@ class Jeu:
         buttonNew.setText(self.font.render('Nouveau', True,(0,0,0)))
         buttonNew.clickable = True
         buttonNew.action = "Jouer"
+        buttonNew.hoverable = True
         buttonManagerSub.addElement(buttonNew)
 
         buttonLoad = elmt.element(650,200,"button.png")
         buttonLoad.setText(self.font.render('Charger', True,(0,0,0)))
         buttonLoad.clickable = True
         buttonLoad.action = "Charger"
+        buttonLoad.hoverable = True
         buttonManagerSub.addElement(buttonLoad)
+
+        #====================== Bouttons Jeu ===========================
+
+        buttonVerif = elmt.element(390,600,"buttonRect.png")
+        buttonVerif.setText(self.font.render('Verifier', True,(0,0,0)))
+        buttonVerif.clickable = True
+        buttonVerif.action = "Verif"
+        buttonManagerJeu.addElement(buttonVerif)
 
         #====================== Initialisation des Layouts ===========================
 
         self.titleScreen = Lyt.Layout()
-        self.subMenu = Lyt.Layout()
-        self.subMenu.addElmtManager(buttonManagerSub)
         self.titleScreen.addElmtManager(buttonManager)
         self.titleScreen.addElmtManager(textManager)
+
+        self.subMenu = Lyt.Layout()
+        self.subMenu.addElmtManager(buttonManagerSub)
+
+        self.jeuLayout = Lyt.Layout()
+        self.jeuLayout.addElmtManager(buttonManagerJeu)
+
+        
         

@@ -7,7 +7,8 @@ class Sudoku:
     def __init__(self, base):
         self.base = base
         self.taille = base * base
-        self.grille = [[0 for colonne in range(0,self.taille)] for ligne in range(0,self.taille)]
+        self.grille = [[0 for colone in range(0,self.taille)] for ligne in range(0,self.taille)]
+        self.grilleDeJeu = [[0 for colone in range(0,self.taille)] for ligne in range(0,self.taille)]
         self.number = ['1','2','3','4','5','6','7','8','9']
         self.remplissage()
         self.vidage(3//4)
@@ -31,11 +32,12 @@ class Sudoku:
             self.font = pygame.font.SysFont("comicsansms", 24)
             case.setTexture(pygame.Surface((40,40),pygame.SRCALPHA))
             case.setText(self.font.render(self.grilleDeJeu[i//9][i%9], True,(255,255,255)))
-            pygame.draw.rect(case.texture,(120,120,255,255),(0,0,40,40),width=1)
+            pygame.draw.rect(case.texture,(150,150,255,255),(0,0,40,40),width=1)
             case.clickable = True
             case.alphaClickable = False
-            case.action = (i//9,i%9)
             case.clickStateToggle = True
+            case.action = (i//9,i%9,self.grilleDeJeu[i//9][i%9])
+
             self.cases.append(case)
             x = x + 40
             if i % 9 == 8:
@@ -47,8 +49,7 @@ class Sudoku:
                 x = self.backgroundGrille.texture_rect.x + 40
 
     def vidage(self,fraction):
-        self.grilleDeJeu = self.grille
-        empties = 81 * 3//4
+        empties = 81 * 2//3
         for p in sample(range(81),empties):
            self.grilleDeJeu[p//9][p%9] = ' '
 
@@ -92,6 +93,7 @@ class Sudoku:
                                     square=[self.grille[i][6:9] for i in range(6,9)]
                             if not value in (square[0] + square[1] + square[2]):
                                 self.grille[row][col]=value
+                                self.grilleDeJeu[row][col]=value
                                 if self.checkgrille():
                                     return True
                                 else:
@@ -176,15 +178,33 @@ class Sudoku:
             case.render(screen)
     
     def event(self,event):
+        if event.type == pygame.KEYDOWN: 
+            if pygame.key.name(event.key) == "escape":
+                for case in self.cases :
+                    case.clickState = False
         for case in self.cases:
             case.eventElmt(event)
-            if case.clickState:
-                pygame.draw.rect(case.texture,(255,120,120,255),(1,1,38,38),width=1)
-            else:
-                pygame.draw.rect(case.texture,(0,0,0,0),(1,1,38,38),width=1)
-            if event.type == pygame.KEYDOWN:
-                self.grilleDeJeu[case.action[0]][case.action[1]] = pygame.key.name(event.key)
-                case.setText(self.font.render(pygame.key.name(event.key), True,(255,255,255)))
+            if case.action[2] == ' ':
+                if case.clickState:
+                    pygame.draw.rect(case.texture,(255,120,120,255),(1,1,38,38),width=1)
+                    if event.type == pygame.KEYDOWN:
+                        if pygame.key.name(event.key) in ("[1]","[2]","[3]","[4]","[5]","[6]","[7]","[8]","[9]","backspace"):
+                            if pygame.key.name(event.key) == "backspace":
+                                self.grilleDeJeu[case.action[0]][case.action[1]] = ' '
+                                case.setText(self.font.render(' ', True,(120,120,120)))
+                            else:    
+                                self.grilleDeJeu[case.action[0]][case.action[1]] = pygame.key.name(event.key)[1]
+                                case.setText(self.font.render(pygame.key.name(event.key)[1], True,(120,120,120)))
+                else:
+                    pygame.draw.rect(case.texture,(0,0,0,0),(1,1,38,38),width=1)
+                if case.texture_rect.collidepoint(pygame.mouse.get_pos()):
+                    pygame.draw.rect(case.texture,(120,255,120,255),(1,1,38,38),width=1)
+                else:
+                    if case.clickState:
+                        pygame.draw.rect(case.texture,(255,120,120,255),(1,1,38,38),width=1)
+                    else:
+                        pygame.draw.rect(case.texture,(120,255,120,0),(1,1,38,38),width=1)
+            
 
     def loadMenu(self):
         root = Tk()
@@ -208,7 +228,7 @@ class Sudoku:
                         else:
                             self.grille[l][c] = content[i]
                             i += 1
-            self.grilleDeJeu = self.grille
+            #self.grilleDeJeu = self.grille.copy()
             self.initRender()
             fichier.close()
 
@@ -221,6 +241,12 @@ class Sudoku:
                     content += str(self.grille[l][c])
             fichier.write(content)
             fichier.close()
+
+    def isFinish(self):
+        if self.grille == self.grilleDeJeu:
+            print("c'est win bro")
+        else:
+            print("not good, try again")
 
     def __del__(self):
         self.grille = []

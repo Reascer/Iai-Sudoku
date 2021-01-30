@@ -8,6 +8,7 @@ class element:
         self.action = None
         self.clickState = False
         self.clickStateToggle = False
+        self.hoverable = False
         self.texture_rect = pygame.Rect(pos_x,pos_y,0,0)
         if textureName is not None:
             self.texture = pygame.image.load("ressources/" + textureName)
@@ -17,7 +18,7 @@ class element:
             #print("w:"+str(self.size_w)+"h:"+str(self.size_h))
     
     def eventElmt(self,event):
-        if self.clickable == True:
+        if self.clickable:
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed(3)[0] == True:
                     if self.texture_rect.collidepoint(event.pos):
@@ -32,6 +33,11 @@ class element:
                             else:
                                 self.clickState = True
                             return self.action
+        if self.hoverable:
+            if self.texture_rect.collidepoint(pygame.mouse.get_pos()):
+                pygame.draw.circle(self.texture,(0,255,0,255),(115,110),111,width=3)
+            else:
+                pygame.draw.circle(self.texture,(0,255,0,0),(115,110),111,width=3)
                         
             
 
