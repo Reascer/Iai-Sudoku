@@ -34,7 +34,7 @@ class Sudoku:
             pygame.draw.rect(case.texture,(120,120,255,255),(0,0,40,40),width=1)
             case.clickable = True
             case.alphaClickable = False
-            case.action = (i//9,i%9)
+            case.action = (i//9,i%9,self.grilleDeJeu[i//9][i%9])
             case.clickStateToggle = True
             self.cases.append(case)
             x = x + 40
@@ -48,7 +48,7 @@ class Sudoku:
 
     def vidage(self,fraction):
         self.grilleDeJeu = self.grille
-        empties = 81 * 3//4
+        empties = 81 * 2//3
         for p in sample(range(81),empties):
            self.grilleDeJeu[p//9][p%9] = ' '
 
@@ -176,15 +176,25 @@ class Sudoku:
             case.render(screen)
     
     def event(self,event):
+        if event.type == pygame.KEYDOWN: 
+            if pygame.key.name(event.key) == "escape":
+                for case in self.cases :
+                    case.clickState = False
         for case in self.cases:
             case.eventElmt(event)
-            if case.clickState:
-                pygame.draw.rect(case.texture,(255,120,120,255),(1,1,38,38),width=1)
-            else:
-                pygame.draw.rect(case.texture,(0,0,0,0),(1,1,38,38),width=1)
-            if event.type == pygame.KEYDOWN:
-                self.grilleDeJeu[case.action[0]][case.action[1]] = pygame.key.name(event.key)
-                case.setText(self.font.render(pygame.key.name(event.key), True,(255,255,255)))
+            if case.action[2] == ' ':
+                if case.clickState:
+                    pygame.draw.rect(case.texture,(255,120,120,255),(1,1,38,38),width=1)
+                    if event.type == pygame.KEYDOWN:
+                        if pygame.key.name(event.key) in ("[1]","[2]","[3]","[4]","[5]","[6]","[7]","[8]","[9]","backspace"):
+                            if pygame.key.name(event.key) == "backspace":
+                                self.grilleDeJeu[case.action[0]][case.action[1]] = ' '
+                                case.setText(self.font.render(' ', True,(120,120,120)))
+                            else:    
+                                self.grilleDeJeu[case.action[0]][case.action[1]] = pygame.key.name(event.key)[1]
+                                case.setText(self.font.render(pygame.key.name(event.key)[1], True,(120,120,120)))
+                else:
+                    pygame.draw.rect(case.texture,(0,0,0,0),(1,1,38,38),width=1)
 
     def loadMenu(self):
         root = Tk()
