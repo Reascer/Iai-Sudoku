@@ -233,6 +233,11 @@ class Sudoku:
             fichier.write(content)
             fichier.close()
 
+    def isFinish(self):
+        if self.grille == self.grilleDeJeu:
+            print("c'est win bro")
+            return True
+
     def __del__(self):
         self.grille = []
         self.grilleDeJeu = []   
