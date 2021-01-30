@@ -35,8 +35,10 @@ class Sudoku:
             pygame.draw.rect(case.texture,(150,150,255,255),(0,0,40,40),width=1)
             case.clickable = True
             case.alphaClickable = False
-            case.action = (i//9,i%9,self.grilleDeJeu[i//9][i%9])
             case.clickStateToggle = True
+            case.hoverable = False
+            case.action = (i//9,i%9,self.grilleDeJeu[i//9][i%9])
+
             self.cases.append(case)
             x = x + 40
             if i % 9 == 8:
@@ -196,6 +198,14 @@ class Sudoku:
                                 case.setText(self.font.render(pygame.key.name(event.key)[1], True,(120,120,120)))
                 else:
                     pygame.draw.rect(case.texture,(0,0,0,0),(1,1,38,38),width=1)
+            if case.texture_rect.collidepoint(pygame.mouse.get_pos()):
+                pygame.draw.rect(case.texture,(120,255,120,255),(1,1,38,38),width=1)
+            else:
+                if case.clickState:
+                    pygame.draw.rect(case.texture,(255,120,120,255),(1,1,38,38),width=1)
+                else:
+                    pygame.draw.rect(case.texture,(120,255,120,0),(1,1,38,38),width=1)
+            
 
     def loadMenu(self):
         root = Tk()
