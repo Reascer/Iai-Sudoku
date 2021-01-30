@@ -2,6 +2,7 @@ from random import shuffle,sample
 import pygame
 import element as elmt
 from tkinter import filedialog, Tk
+import case as cse
 
 class Sudoku:
     def __init__(self, base):
@@ -28,15 +29,14 @@ class Sudoku:
                 x = x - 1
             if i % 3 == 0:
                 x = x + 2
-            case = elmt.element(x,y)
-            self.font = pygame.font.SysFont("comicsansms", 24)
+            case = cse.case((i//9,i%9),self.grilleDeJeu[i//9][i%9],x,y)
+            self.font = pygame.font.SysFont("comicsansms", 20)
             case.setTexture(pygame.Surface((40,40),pygame.SRCALPHA))
             case.setText(self.font.render(self.grilleDeJeu[i//9][i%9], True,(255,255,255)))
             pygame.draw.rect(case.texture,(150,150,255,255),(0,0,40,40),width=1)
             case.clickable = True
             case.alphaClickable = False
             case.clickStateToggle = True
-            case.action = (i//9,i%9,self.grilleDeJeu[i//9][i%9])
 
             self.cases.append(case)
             x = x + 40
@@ -183,54 +183,72 @@ class Sudoku:
                 for case in self.cases :
                     case.clickState = False
         for case in self.cases:
-            case.eventElmt(event)
-            if case.action[2] == ' ':
+            case.event(event)
+            if case.grilleValeur == ' ':
+                if case.rightClickState:
+                    for case2 in self.cases :
+                        case2.clickState = False
                 if case.clickState:
+                    for case2 in self.cases :
+                        case2.rightClickState = False
                     pygame.draw.rect(case.texture,(255,120,120,255),(1,1,38,38),width=1)
                     if event.type == pygame.KEYDOWN:
                         if pygame.key.name(event.key) in ("[1]","[2]","[3]","[4]","[5]","[6]","[7]","[8]","[9]","backspace"):
                             if pygame.key.name(event.key) == "backspace":
-                                self.grilleDeJeu[case.action[0]][case.action[1]] = ' '
+                                case.indices = []
+                                self.grilleDeJeu[case.grillePos[0]][case.grillePos[1]] = ' '
                                 case.setText(self.font.render(' ', True,(120,120,120)))
                             else:    
-                                self.grilleDeJeu[case.action[0]][case.action[1]] = pygame.key.name(event.key)[1]
+                                self.grilleDeJeu[case.grillePos[0]][case.grillePos[1]] = pygame.key.name(event.key)[1]
                                 case.setText(self.font.render(pygame.key.name(event.key)[1], True,(120,120,120)))
                 else:
-                    pygame.draw.rect(case.texture,(0,0,0,0),(1,1,38,38),width=1)
+                    if not case.rightClickState:
+                        pygame.draw.rect(case.texture,(0,0,0,0),(1,1,38,38),width=1)
                 if case.texture_rect.collidepoint(pygame.mouse.get_pos()):
-                    pygame.draw.rect(case.texture,(120,255,120,255),(1,1,38,38),width=1)
+                    if not case.clickState and not case.rightClickState:
+                        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                        pygame.draw.rect(case.texture,(120,255,120,255),(1,1,38,38),width=1)
                 else:
-                    if case.clickState:
-                        pygame.draw.rect(case.texture,(255,120,120,255),(1,1,38,38),width=1)
-                    else:
-                        pygame.draw.rect(case.texture,(120,255,120,0),(1,1,38,38),width=1)
+                    if not case.clickState and not case.rightClickState:
+                        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+                        pygame.draw.rect(case.texture,(0,0,0,0),(1,1,38,38),width=1)
             
 
     def loadMenu(self):
         root = Tk()
         root.withdraw()
-        self.load(filedialog.askopenfilename(initialdir = "./", filetypes=(("Fichier Grille", ".txt"), ('Tout Fichier', "*.*"))))
-        return True
+        return self.load(filedialog.askopenfilename(initialdir = "./", filetypes=(("Fichier Grille", ".txt"), ('Tout Fichier', "*.*"))))
+        
     
     def load(self, path):
-        with open(path, mode="r") as fichier:
-            # Les etapes en lecture sur le fichier
-            content = fichier.read()
-            if content == "":
-                print("Il n'y a rien a charger.")
-            else:
-                i = 0
-                for l in range(len(self.grille)):
-                    for c in range(len(self.grille)):
-                        if content[i] == "-":
-                            self.grille[l][c] = -content[i + 1]
-                            i += 2
-                        else:
-                            self.grille[l][c] = content[i]
-                            i += 1
-            #self.grilleDeJeu = self.grille.copy()
-            self.initRender()
-            fichier.close()
+        try:
+            with open(path, mode="r") as fichier:
+                # Les etapes en lecture sur le fichier
+                content = fichier.read()
+                if content == "":
+                    print("Il n'y a rien a charger.")
+                else:
+                    i = 0
+                    for l in range(len(self.grille)):
+                        for c in range(len(self.grille)):
+                            if content[i] == "-":
+                                self.grille[l][c] = -content[i + 1]
+                                self.grilleDeJeu[l][c] = -content[i + 1]
+
+                                i += 2
+                            else:
+                                self.grille[l][c] = content[i]
+                                self.grilleDeJeu[l][c] = content[i]
+
+                                
+                                i += 1
+                #self.grilleDeJeu = self.grille.copy()
+                self.initRender()
+                fichier.close()
+                return True
+        except FileNotFoundError:
+            print("Il n'y a rien a charger.")
+            return False
 
     def save(self, path):
         with open(path, mode="w") as fichier:
