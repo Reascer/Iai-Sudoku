@@ -15,8 +15,12 @@ class Jeu:
         #self.sudoku.load('grille.txt')
         self.sudoku.afficher()
         #self.sudoku.save('grille.txt')  --> Faudrait demander un nom au user, puis le reafficher dans une liste ensuite
-
+        self.heure = 0
+        self.minute = 0
+        self.seconde = 0
         self.running = True
+        self.timer = False
+        self.Pause = False
 
         pygame.display.set_caption(title) # Mettre le titre sur Iai-sudoku <3
         self.screen = pygame.display.set_mode((1080,720)) # Resize la fenêtre
@@ -47,12 +51,45 @@ class Jeu:
                     if ok == True:
                         self.layoutEnCours = "Jeu"
             if self.layoutEnCours == "Jeu":
+                if not self.timer:
+                    pygame.time.set_timer( pygame.USEREVENT + 1,1000)
+                    self.timer = True
                 action = self.jeuLayout.event(event)
                 if action == 'Sauvegarder':
                     self.sudoku.save()
                 if action == 'Verif':
                     self.sudoku.isFinish()
+                if action == 'Pause':
+                    if self.Pause == False:
+                        self.Pause = True
+                    else:
+                        self.Pause = False
                 self.sudoku.event(event)
+                if event.type ==  pygame.USEREVENT + 1:
+                    if not self.Pause:
+                        self.seconde = self.seconde + 1
+                        if self.seconde == 60:
+                            self.seconde = 0
+                            self.minute = self.minute + 1
+                            if self.minute == 60:
+                                self.minute = 0
+                                self.heure = self.heure + 1
+                        if self.seconde < 10:
+                            stringCompteur = '0'+str(self.seconde)
+                        else:
+                            stringCompteur = str(self.seconde)
+
+                        if self.minute < 10:
+                            stringCompteur = '0'+ str(self.minute)+':'+ stringCompteur
+                        else:
+                            stringCompteur = str(self.minute)+':'+ stringCompteur
+
+                        if self.heure < 10:
+                            stringCompteur = '0'+str(self.heure)+':'+ stringCompteur
+                        else:
+                            stringCompteur = str(self.heure)+':'+ stringCompteur
+                        self.jeuLayout.listElmtManager[1].elements[0].setText(self.font.render(stringCompteur, True,(0,0,0)))
+
             
     def update(self):
         pass
@@ -136,6 +173,11 @@ class Jeu:
         buttonManagerSub.addElement(buttonLoad)
 
         #====================== Bouttons Jeu ===========================
+        otherElmManagerJeu = elmtManager.elementManager()
+
+        compteur = elmt.element(380,25,"compteur.png")
+        compteur.setText(pygame.transform.scale(self.font.render("00:00:00", True,(0,0,0)),(200,70)))
+        otherElmManagerJeu.addElement(compteur)
 
         buttonVerif = elmt.element(440,600,"buttonRect.png")
         buttonVerif.setTexture(pygame.transform.scale(buttonVerif.texture,(200,80)))
@@ -169,6 +211,8 @@ class Jeu:
 
         self.jeuLayout = Lyt.Layout()
         self.jeuLayout.addElmtManager(buttonManagerJeu)
+        self.jeuLayout.addElmtManager(otherElmManagerJeu)
+
 
         
         
