@@ -8,6 +8,7 @@ class Sudoku:
         self.base = base
         self.taille = base * base
         self.grille = [[0 for colone in range(0,self.taille)] for ligne in range(0,self.taille)]
+        self.grilleDeJeu = [[0 for colone in range(0,self.taille)] for ligne in range(0,self.taille)]
         self.number = ['1','2','3','4','5','6','7','8','9']
         self.remplissage()
         self.vidage(3//4)
@@ -31,7 +32,7 @@ class Sudoku:
             self.font = pygame.font.SysFont("comicsansms", 24)
             case.setTexture(pygame.Surface((40,40),pygame.SRCALPHA))
             case.setText(self.font.render(self.grilleDeJeu[i//9][i%9], True,(255,255,255)))
-            pygame.draw.rect(case.texture,(120,120,255,255),(0,0,40,40),width=1)
+            pygame.draw.rect(case.texture,(150,150,255,255),(0,0,40,40),width=1)
             case.clickable = True
             case.alphaClickable = False
             case.action = (i//9,i%9,self.grilleDeJeu[i//9][i%9])
@@ -47,7 +48,6 @@ class Sudoku:
                 x = self.backgroundGrille.texture_rect.x + 40
 
     def vidage(self,fraction):
-        self.grilleDeJeu = self.grille
         empties = 81 * 2//3
         for p in sample(range(81),empties):
            self.grilleDeJeu[p//9][p%9] = ' '
@@ -92,6 +92,7 @@ class Sudoku:
                                     square=[self.grille[i][6:9] for i in range(6,9)]
                             if not value in (square[0] + square[1] + square[2]):
                                 self.grille[row][col]=value
+                                self.grilleDeJeu[row][col]=value
                                 if self.checkgrille():
                                     return True
                                 else:
@@ -218,7 +219,7 @@ class Sudoku:
                         else:
                             self.grille[l][c] = content[i]
                             i += 1
-            self.grilleDeJeu = self.grille
+            #self.grilleDeJeu = self.grille.copy()
             self.initRender()
             fichier.close()
 

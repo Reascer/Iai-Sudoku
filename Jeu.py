@@ -45,6 +45,9 @@ class Jeu:
                     if ok == True:
                         self.layoutEnCours = "Jeu"
             if self.layoutEnCours == "Jeu":
+                action = self.jeuLayout.event(event)
+                if action == 'verif':
+                    self.sudoku.isFinish()
                 self.sudoku.event(event)
             
     def update(self):
@@ -53,7 +56,9 @@ class Jeu:
     def render(self):
         if self.layoutEnCours == 'Jeu':
             self.backgroundManager.renderElements(self.screen,1)
+            self.jeuLayout.render(self.screen)
             self.sudoku.render(self.screen)
+
 
         if self.layoutEnCours == "titleScreen":
             self.backgroundManager.renderElements(self.screen,0)
@@ -78,6 +83,7 @@ class Jeu:
         textManager = elmtManager.elementManager()
         buttonManager = elmtManager.elementManager()
         buttonManagerSub = elmtManager.elementManager()
+        buttonManagerJeu = elmtManager.elementManager()
 
         #====================== element a ajouter ===========================
         
@@ -121,11 +127,25 @@ class Jeu:
         buttonLoad.action = "Charger"
         buttonManagerSub.addElement(buttonLoad)
 
+        #====================== Bouttons Jeu ===========================
+
+        buttonVerif = elmt.element(250,200,"buttonRect.png")
+        buttonVerif.setText(self.font.render('verfier', True,(0,0,0)))
+        buttonVerif.clickable = True
+        buttonVerif.action = "verif"
+        buttonManagerJeu.addElement(buttonVerif)
+
         #====================== Initialisation des Layouts ===========================
 
         self.titleScreen = Lyt.Layout()
-        self.subMenu = Lyt.Layout()
-        self.subMenu.addElmtManager(buttonManagerSub)
         self.titleScreen.addElmtManager(buttonManager)
         self.titleScreen.addElmtManager(textManager)
+
+        self.subMenu = Lyt.Layout()
+        self.subMenu.addElmtManager(buttonManagerSub)
+
+        self.jeuLayout = Lyt.Layout()
+        self.jeuLayout.addElmtManager(buttonManagerJeu)
+
+        
         
