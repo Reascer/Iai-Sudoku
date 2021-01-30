@@ -13,7 +13,7 @@ class elementManager:
 
     def EventElements(self,event):
         for element in self.elements:
-            action = element.eventElmt(event)
+            action = element.event(event)
             if not action == None:
                 return action
 

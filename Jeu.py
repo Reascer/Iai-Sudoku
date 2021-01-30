@@ -30,10 +30,12 @@ class Jeu:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 self.quit()
+                return True
             if self.layoutEnCours == "titleScreen":
                 action = self.titleScreen.event(event)
                 if action == 'Quitter':
                     self.quit()
+                    return True
                 if action == 'SubMenu':                    
                     self.layoutEnCours = "SubMenu"
             if self.layoutEnCours == "SubMenu":
@@ -48,8 +50,6 @@ class Jeu:
                 action = self.jeuLayout.event(event)
                 if action == 'Verif':
                     self.sudoku.isFinish()
-                if not self.running:
-                    return True
                 self.sudoku.event(event)
             
     def update(self):
