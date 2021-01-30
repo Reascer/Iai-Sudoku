@@ -48,6 +48,8 @@ class Jeu:
                 action = self.jeuLayout.event(event)
                 if action == 'Verif':
                     self.sudoku.isFinish()
+                if not self.running:
+                    return True
                 self.sudoku.event(event)
             
     def update(self):
@@ -105,12 +107,14 @@ class Jeu:
         buttonPlay.setText(self.font.render('Play', True,(0,0,0)))
         buttonPlay.clickable = True
         buttonPlay.action = "SubMenu"
+        buttonPlay.hoverable = True
         buttonManager.addElement(buttonPlay)
 
         buttonQuitter = elmt.element(600,400,"button.png")
         buttonQuitter.setText(self.font.render('Quitter', True,(0,0,0)))
         buttonQuitter.clickable = True
         buttonQuitter.action = "Quitter"
+        buttonQuitter.hoverable = True
         buttonManager.addElement(buttonQuitter)
         
         #====================== Bouttons Sous Menu ===========================
@@ -119,12 +123,14 @@ class Jeu:
         buttonNew.setText(self.font.render('Nouveau', True,(0,0,0)))
         buttonNew.clickable = True
         buttonNew.action = "Jouer"
+        buttonNew.hoverable = True
         buttonManagerSub.addElement(buttonNew)
 
         buttonLoad = elmt.element(650,200,"button.png")
         buttonLoad.setText(self.font.render('Charger', True,(0,0,0)))
         buttonLoad.clickable = True
         buttonLoad.action = "Charger"
+        buttonLoad.hoverable = True
         buttonManagerSub.addElement(buttonLoad)
 
         #====================== Bouttons Jeu ===========================
@@ -133,7 +139,6 @@ class Jeu:
         buttonVerif.setText(self.font.render('Verifier', True,(0,0,0)))
         buttonVerif.clickable = True
         buttonVerif.action = "Verif"
-        buttonVerif.hoverable = False
         buttonManagerJeu.addElement(buttonVerif)
 
         #====================== Initialisation des Layouts ===========================

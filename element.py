@@ -8,7 +8,7 @@ class element:
         self.action = None
         self.clickState = False
         self.clickStateToggle = False
-        self.hoverable = True
+        self.hoverable = False
         self.texture_rect = pygame.Rect(pos_x,pos_y,0,0)
         if textureName is not None:
             self.texture = pygame.image.load("ressources/" + textureName)
