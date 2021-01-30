@@ -46,8 +46,8 @@ class Jeu:
                         self.layoutEnCours = "Jeu"
             if self.layoutEnCours == "Jeu":
                 action = self.jeuLayout.event(event)
-                if action == 'verif':
-                    pass#self.sudoku.isFinish()
+                if action == 'Verif':
+                    self.sudoku.isFinish()
                 self.sudoku.event(event)
             
     def update(self):
@@ -129,10 +129,10 @@ class Jeu:
 
         #====================== Bouttons Jeu ===========================
 
-        buttonVerif = elmt.element(30,600,"buttonRect.png")
-        buttonVerif.setText(self.font.render('verifier', True,(0,0,0)))
+        buttonVerif = elmt.element(390,600,"buttonRect.png")
+        buttonVerif.setText(self.font.render('Verifier', True,(0,0,0)))
         buttonVerif.clickable = True
-        buttonVerif.action = "verif"
+        buttonVerif.action = "Verif"
         buttonVerif.hoverable = False
         buttonManagerJeu.addElement(buttonVerif)
 
