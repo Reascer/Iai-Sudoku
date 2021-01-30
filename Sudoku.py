@@ -229,23 +229,17 @@ class Sudoku:
         try:
             with open(path, mode="r") as fichier:
                 # Les etapes en lecture sur le fichier
-                content = fichier.read()
+                content = fichier.readline()
                 if content == "":
                     print("Il n'y a rien a charger.")
                 else:
-                    i = 0
-                    for l in range(len(self.grille)):
-                        for c in range(len(self.grille)):
-                            if content[i] == "-":
-                                self.grille[l][c] = -content[i + 1]
-                                self.grilleDeJeu[l][c] = -content[i + 1]
-
-                                i += 2
-                            else:
+                    for i in range(self.taille*self.taille):
+                        self.grilleDeJeu[i//self.taille][i%self.taille] = content[i]
+                    for content in fichier:
+                        i = 0
+                        for l in range(len(self.grille)):
+                            for c in range(len(self.grille)):
                                 self.grille[l][c] = content[i]
-                                self.grilleDeJeu[l][c] = content[i]
-
-                                
                                 i += 1
                 #self.grilleDeJeu = self.grille.copy()
                 self.initRender()
