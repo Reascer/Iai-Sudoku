@@ -44,19 +44,23 @@ class Jeu:
                     ok = self.sudoku.loadMenu()
                     if ok == True:
                         self.layoutEnCours = "Jeu"
+            if self.layoutEnCours == "Jeu":
+                self.sudoku.event(event)
             
     def update(self):
         pass
 
     def render(self):
-        self.backgroundManager.renderElements(self.screen)
         if self.layoutEnCours == 'Jeu':
+            self.backgroundManager.renderElements(self.screen,1)
             self.sudoku.render(self.screen)
 
         if self.layoutEnCours == "titleScreen":
+            self.backgroundManager.renderElements(self.screen,0)
             self.titleScreen.render(self.screen)
 
         if self.layoutEnCours == "SubMenu":
+            self.backgroundManager.renderElements(self.screen,0)
             self.subMenu.render(self.screen)
 
 
@@ -80,6 +84,10 @@ class Jeu:
         titleBackground = elmt.element(0,0,"sakuraBackground.jpg")
         titleBackground.texture = pygame.transform.scale(titleBackground.texture,(1080,720))
         self.backgroundManager.addElement(titleBackground)
+
+        jeuBackground = elmt.element(0,0,"sakuraBackground2.jpg")
+        jeuBackground.texture = pygame.transform.scale(jeuBackground.texture,(1080,720))
+        self.backgroundManager.addElement(jeuBackground)
 
         Menutitle = elmt.element(100,100)
         Menutitle.setTexture(self.font.render('Iai-sudoku', True,(0,0,0))) # pour les parametres: le text , je sais plus mais true du coup , la couleur du text en RGB

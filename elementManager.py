@@ -5,9 +5,11 @@ class elementManager:
     def addElement(self,element):
         self.elements.append(element)
 
-    def renderElements(self,screen):
+    def renderElements(self,screen,index=None):
         for element in self.elements:
             element.render(screen)
+        if index is not None:
+            self.elements[index].render(screen)
 
     def EventElements(self,event):
         for element in self.elements:

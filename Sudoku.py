@@ -33,7 +33,9 @@ class Sudoku:
             case.setText(self.font.render(self.grilleDeJeu[i//9][i%9], True,(255,255,255)))
             pygame.draw.rect(case.texture,(120,120,255,255),(0,0,40,40),width=1)
             case.clickable = True
-            case.action = "change"
+            case.alphaClickable = False
+            case.action = (i//9,i%9)
+            case.clickStateToggle = True
             self.cases.append(case)
             x = x + 40
             if i % 9 == 8:
@@ -172,18 +174,23 @@ class Sudoku:
         self.backgroundGrille.render(screen)
         for case in self.cases :
             case.render(screen)
+    
+    def event(self,event):
+        for case in self.cases:
+            case.eventElmt(event)
+            if case.clickState:
+                pygame.draw.rect(case.texture,(255,120,120,255),(1,1,38,38),width=1)
+            else:
+                pygame.draw.rect(case.texture,(0,0,0,0),(1,1,38,38),width=1)
+            if event.type == pygame.KEYDOWN:
+                self.grilleDeJeu[case.action[0]][case.action[1]] = pygame.key.name(event.key)
+                case.setText(self.font.render(pygame.key.name(event.key), True,(255,255,255)))
 
     def loadMenu(self):
         root = Tk()
         root.withdraw()
         self.load(filedialog.askopenfilename(initialdir = "./", filetypes=(("Fichier Grille", ".txt"), ('Tout Fichier', "*.*"))))
         return True
-
-    def event(self,event):
-        for case in self.cases:
-            action = case.eventElmt(event)
-            if not action == None:
-                return action
     
     def load(self, path):
         with open(path, mode="r") as fichier:
