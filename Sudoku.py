@@ -3,6 +3,8 @@ import pygame
 import element as elmt
 from tkinter import filedialog, Tk
 import case as cse
+from os import getcwd
+from datetime import datetime
 
 class Sudoku:
     def __init__(self, base):
@@ -182,6 +184,7 @@ class Sudoku:
             if pygame.key.name(event.key) == "escape":
                 for case in self.cases :
                     case.clickState = False
+                    case.rightClickState = False
         for case in self.cases:
             case.event(event)
             if case.grilleValeur == ' ':
@@ -252,14 +255,23 @@ class Sudoku:
             print("Il n'y a rien a charger.")
             return False
 
-    def save(self, path):
+    def save(self):
+        dateNow = datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
+        path = str(getcwd()+'\\'+'grille_'+dateNow+'.sudoku')
         with open(path, mode="w") as fichier:
             # Les etapes en ecriture sur le fichier
-            content = ""
+            grilleActu = ""
+            for l in range(len(self.grilleDeJeu)):
+                for c in range(len(self.grilleDeJeu)):
+                    grilleActu += str(self.grilleDeJeu[l][c])
+            grilleFinale = ""
             for l in range(len(self.grille)):
                 for c in range(len(self.grille)):
-                    content += str(self.grille[l][c])
-            fichier.write(content)
+                    grilleFinale += str(self.grille[l][c])
+            fichier.write(grilleActu)
+            fichier.write('\n')
+            fichier.write(grilleFinale)
+            print(path)
             fichier.close()
 
     def isFinish(self):

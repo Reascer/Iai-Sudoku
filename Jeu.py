@@ -48,6 +48,8 @@ class Jeu:
                         self.layoutEnCours = "Jeu"
             if self.layoutEnCours == "Jeu":
                 action = self.jeuLayout.event(event)
+                if action == 'Sauvegarder':
+                    self.sudoku.save()
                 if action == 'Verif':
                     self.sudoku.isFinish()
                 self.sudoku.event(event)
@@ -135,11 +137,26 @@ class Jeu:
 
         #====================== Bouttons Jeu ===========================
 
-        buttonVerif = elmt.element(390,600,"buttonRect.png")
-        buttonVerif.setText(self.font.render('Verifier', True,(0,0,0)))
+        buttonVerif = elmt.element(440,600,"buttonRect.png")
+        buttonVerif.setTexture(pygame.transform.scale(buttonVerif.texture,(200,80)))
+        buttonVerif.setText(pygame.transform.scale(self.font.render('Verifier', True,(0,0,0)),(150,70)))
         buttonVerif.clickable = True
         buttonVerif.action = "Verif"
         buttonManagerJeu.addElement(buttonVerif)
+
+        buttonSauvegarder = elmt.element(200,600,"buttonRect.png")
+        buttonSauvegarder.setTexture(pygame.transform.scale(buttonSauvegarder.texture,(200,80)))
+        buttonSauvegarder.setText(pygame.transform.scale(self.font.render('Sauvegarder', True,(0,0,0)),(150,50)))
+        buttonSauvegarder.clickable = True
+        buttonSauvegarder.action = "Sauvegarder"
+        buttonManagerJeu.addElement(buttonSauvegarder)
+
+        buttonPause = elmt.element(680,600,"buttonRect.png")
+        buttonPause.setTexture(pygame.transform.scale(buttonPause.texture,(200,80)))
+        buttonPause.setText(pygame.transform.scale(self.font.render('Pause', True,(0,0,0)),(150,70)))
+        buttonPause.clickable = True
+        buttonPause.action = "Pause"
+        buttonManagerJeu.addElement(buttonPause)
 
         #====================== Initialisation des Layouts ===========================
 
