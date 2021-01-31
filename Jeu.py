@@ -6,17 +6,15 @@ from Sudoku import Sudoku
 import Layout as Lyt
 from random import randint
 
+#====================== Classe prinpale du programme ===========================#
+
 class Jeu:
     def __init__(self,title,width,height):
         pygame.init() #initalisation de pygame
         self.title = title
         self.width = width
         self.height = height
-        self.layoutEnCours = "titleScreen"
-        # self.sudoku = Sudoku(self.base)
-        #self.sudoku.load('grille.txt')
-        # self.sudoku.afficher()
-        #self.sudoku.save('grille.txt')  --> Faudrait demander un nom au user, puis le reafficher dans une liste ensuite
+        self.layoutEnCours = "titleScreen"        
         self.heure = 0
         self.minute = 0
         self.seconde = 0
@@ -29,10 +27,11 @@ class Jeu:
 
         pygame.display.set_caption(title) # Mettre le titre sur Iai-sudoku <3
         self.screen = pygame.display.set_mode((width,height)) # Resize la fenêtre
-        self.font = pygame.font.SysFont("comicsansms", 30) # initialisaiton des font (c'est pour le texte)
+        self.font = pygame.font.SysFont("comicsansms", 30) # initialisaTIon des font (pour le texte)
 
         self.initRender()
 
+#====================== Liste des events pris en charge par l'application ===========================#
 
     def event(self):
         for event in pygame.event.get():
@@ -233,6 +232,8 @@ class Jeu:
         self.jeuLayout.listElmtManager[0].elements[1].setText(self.font.render(vie, True,(0,190,0)))        
         self.sudoku.afficher()
 
+
+
     def update(self):
         for petal in self.sakuraPetalManager.elements:
             if self.sakuraDelay < petal.action[2]:
@@ -246,6 +247,7 @@ class Jeu:
         if self.sakuraDelay <= 600:
             self.sakuraDelay = self.sakuraDelay + 1
 
+#====================== Activation des layouts suivant la valeur de la variable "layoutEnCours" ===========================#
 
     def render(self):
         if self.layoutEnCours == 'Jeu':
@@ -269,7 +271,6 @@ class Jeu:
             self.sakuraPetalManager.renderElements(self.screen)
             self.choixGrille.render(self.screen)
 
-
         pygame.display.flip()
 
     def quit(self):
@@ -277,7 +278,7 @@ class Jeu:
         pygame.quit()
         print("end of game")
 
-    #Ajouter les elements dans l'initRender
+        #====================== Ajouter les elements dans l'initRender ===========================#
 
     def initRender(self):
         self.backgroundManager = elmtManager.elementManager()
@@ -289,7 +290,7 @@ class Jeu:
         buttonManagerJeu = elmtManager.elementManager()
 
 
-        #====================== element a ajouter ===========================
+        #====================== element a ajouter ===========================#
 
         titleBackground = elmt.element(0,0,"sakuraBackground.jpg")
         titleBackground.texture = pygame.transform.scale(titleBackground.texture,(self.width,self.height))
@@ -313,7 +314,7 @@ class Jeu:
         self.Seppuku = elmt.element(0,0,"Seppuku.png")
 
 
-        #====================== Bouttons Home Screen ===========================
+        #====================== Bouttons Home Screen ===========================#
 
         buttonPlay = elmt.element(5,330,"button.png")
         buttonPlay.setText(pygame.font.SysFont("comicsansms", 48).render('Play', True,(0,0,0)))
@@ -329,7 +330,7 @@ class Jeu:
         buttonQuitter.hoverable = True
         buttonManager.addElement(buttonQuitter)
 
-        #====================== Bouttons Sous Menu ===========================
+        #====================== Bouttons Sous Menu ===========================#
 
         buttonNew = elmt.element(5,330,"button.png")
         buttonNew.setText(self.font.render('Nouveau', True,(0,0,0)))
@@ -345,7 +346,7 @@ class Jeu:
         buttonLoad.hoverable = True
         buttonManagerSub.addElement(buttonLoad)
 
-        # ====================== Bouttons Choix Grille ===========================
+        # ====================== Bouttons Choix Grille ===========================#
 
         buttonNeuf = elmt.element(5, 330, "button.png")
         buttonNeuf.setText(self.font.render('9x9', True, (0, 0, 0)))
@@ -361,7 +362,7 @@ class Jeu:
         buttonSeize.hoverable = True
         buttonManagerGrille.addElement(buttonSeize)
 
-        #====================== Bouttons Jeu ===========================
+        #====================== Bouttons Jeu ===========================#
         otherElmManagerJeu = elmtManager.elementManager()
 
         compteur = elmt.element(450,5,"compteur.png")
@@ -407,7 +408,7 @@ class Jeu:
         buttonhtp.action = "howToPlay"
 
 
-        #====================== Bouttons Back to Home ===========================
+        #====================== Bouttons Back to Home ===========================#
 
         buttonBack = elmt.element(820,-10,"buttonRect.png")
         buttonBack.setTexture(pygame.transform.scale(buttonBack.texture,(400,180)))

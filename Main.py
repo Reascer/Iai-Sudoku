@@ -1,5 +1,7 @@
 from Jeu import *
 
+#====================== Classe main du programme ===========================#
+
 jeu = Jeu("Iai-sudoku",1200,800)
 
 while jeu.running:

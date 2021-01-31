@@ -19,7 +19,6 @@ class element:
             self.texture_rect = self.texture.get_rect()
             self.texture_rect.x = pos_x
             self.texture_rect.y = pos_y
-            #print("w:"+str(self.size_w)+"h:"+str(self.size_h))
     
     def event(self,event):
         if self.clickable:
@@ -64,9 +63,6 @@ class element:
                 if self.clickState:
                     self.text.fill((255,255,0),rect=None, special_flags=pygame.BLEND_RGB_ADD)
                 
-                        
-            
-
     def render(self,screen):
         if self.texture is not None:
             screen.blit(self.texture, (self.texture_rect.x, self.texture_rect.y))
