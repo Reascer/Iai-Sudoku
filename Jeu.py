@@ -13,7 +13,7 @@ class Jeu:
         self.width = width
         self.height = height
         self.layoutEnCours = "titleScreen"
-
+        self.base = base
         # self.sudoku = Sudoku(self.base)
         #self.sudoku.load('grille.txt')
         # self.sudoku.afficher()
@@ -54,11 +54,6 @@ class Jeu:
                 if action == 'Jouer':
                     self.sound_manager.playOneTime('click')
                     self.layoutEnCours = "ChoixGrille"
-
-                    self.layoutEnCours = "Jeu"
-                    self.sudoku = Sudoku(self.base)
-                    self.sudoku.afficher()
-                    self.sound_manager.playXTime('vent')
                 if action == 'Charger':
                     self.sound_manager.playOneTime('click')
                     ok = self.sudoku.loadMenu()
@@ -72,13 +67,14 @@ class Jeu:
             if self.layoutEnCours == 'ChoixGrille':
                 action = self.choixGrille.event(event)
                 if action == 'Neuf':
+                    self.launchSudoku(3)
                     self.layoutEnCours = "Jeu"
                     self.sound_manager.playXTime('vent')
                 if action == 'Seize':
+                    self.launchSudoku(4)
                     self.layoutEnCours = "Jeu"
                     self.sound_manager.playXTime('vent')
-                        self.sudoku = Sudoku(self.base)
-                        self.sudoku.afficher()
+
             if self.layoutEnCours == "Jeu":
                 if not self.timer:
                     pygame.time.set_timer( pygame.USEREVENT + 1,1000)
@@ -126,6 +122,9 @@ class Jeu:
                         self.sudoku.stringCompteur = stringCompteur
                         self.jeuLayout.listElmtManager[1].elements[0].setText(self.font.render(stringCompteur, True,(0,0,0)))
 
+    def launchSudoku(self, base):
+        self.sudoku = Sudoku(base)
+        self.sudoku.afficher()
 
     def update(self):
 
