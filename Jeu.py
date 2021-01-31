@@ -6,7 +6,7 @@ from Sudoku import Sudoku
 import Layout as Lyt
 from random import randint
 
-#====================== Classe prinpale du programme ===========================#
+#====================== Classe principale du programme ===========================#
 
 class Jeu:
     def __init__(self,title,width,height):
@@ -442,7 +442,7 @@ class Jeu:
         buttonManagerJeu.addElement(buttonBack)
         buttonManagerJeu.addElement(buttonhtp)
         
-        #====================== Initialisation des Layouts ===========================
+        #====================== Initialisation des Layouts ===========================#
 
         self.titleScreen = Lyt.Layout()
         self.titleScreen.addElmtManager(buttonManager)
