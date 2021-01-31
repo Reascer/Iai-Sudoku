@@ -26,7 +26,7 @@ class Jeu:
         self.screen = pygame.display.set_mode((1080,720)) # Resize la fenêtre
 
         self.font = pygame.font.SysFont("comicsansms", 48) # initialisaiton des font (c'est pour le texte)
-
+        
         self.initRender()
 
 
@@ -40,10 +40,10 @@ class Jeu:
                 if action == 'Quitter':
                     self.quit()
                     return True
-                if action == 'SubMenu':
+                if action == 'SubMenu':                    
                     self.layoutEnCours = "SubMenu"
             if self.layoutEnCours == "SubMenu":
-                action = self.subMenu.event(event)
+                action = self.subMenu.event(event)                
                 if action == 'Jouer':
                     self.layoutEnCours = "Jeu"
                     self.sound_manager.playXTime('vent')
@@ -99,7 +99,7 @@ class Jeu:
                         self.sudoku.stringCompteur = stringCompteur
                         self.jeuLayout.listElmtManager[1].elements[0].setText(self.font.render(stringCompteur, True,(0,0,0)))
 
-
+            
     def update(self):
         pass
 
@@ -120,14 +120,14 @@ class Jeu:
 
 
         pygame.display.flip()
-
+    
     def quit(self):
         self.running = False
         pygame.quit()
         print("end of game")
-
+    
     #Ajouter les elements dans l'initRender
-
+    
     def initRender(self):
         self.backgroundManager = elmtManager.elementManager()
         textManager = elmtManager.elementManager()
@@ -136,7 +136,7 @@ class Jeu:
         buttonManagerJeu = elmtManager.elementManager()
 
         #====================== element a ajouter ===========================
-
+        
         titleBackground = elmt.element(0,0,"sakuraBackground.jpg")
         titleBackground.texture = pygame.transform.scale(titleBackground.texture,(1080,720))
         self.backgroundManager.addElement(titleBackground)
@@ -148,9 +148,9 @@ class Jeu:
         Menutitle = elmt.element(100,100)
         Menutitle.setTexture(self.font.render('Iai-sudoku', True,(0,0,0))) # pour les parametres: le text , je sais plus mais true du coup , la couleur du text en RGB
         textManager.elements.append(Menutitle)
-
+        
         #====================== Bouttons Home Screen ===========================
-
+        
         buttonPlay = elmt.element(255,400,"button.png")
         buttonPlay.setText(self.font.render('Play', True,(0,0,0)))
         buttonPlay.clickable = True
@@ -164,9 +164,9 @@ class Jeu:
         buttonQuitter.action = "Quitter"
         buttonQuitter.hoverable = True
         buttonManager.addElement(buttonQuitter)
-
+        
         #====================== Bouttons Sous Menu ===========================
-
+        
         buttonNew = elmt.element(250,200,"button.png")
         buttonNew.setText(self.font.render('Nouveau', True,(0,0,0)))
         buttonNew.clickable = True
@@ -221,3 +221,7 @@ class Jeu:
         self.jeuLayout = Lyt.Layout()
         self.jeuLayout.addElmtManager(buttonManagerJeu)
         self.jeuLayout.addElmtManager(otherElmManagerJeu)
+
+
+        
+        
