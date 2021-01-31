@@ -43,13 +43,18 @@ class element:
             if self.texture_rect.collidepoint(pygame.mouse.get_pos()):
                 mouse_pos = (pygame.mouse.get_pos()[0] - self.texture_rect.x , pygame.mouse.get_pos()[1] - self.texture_rect.y)
                 if not self.texture.get_at(mouse_pos)[3] == 0:
-                    pygame.draw.circle(self.texture,(0,255,0,255),(320,230),180,width=3)
+                    self.text.fill((255,255,0),rect=None, special_flags=pygame.BLEND_RGB_ADD)
                     pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
                 else:
-                    pygame.draw.circle(self.texture,(0,255,0,0),(320,230),180,width=3)
+                    self.text.fill((255,255,0),rect=None, special_flags=pygame.BLEND_RGB_SUB)
                     pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
             else:
-                pygame.draw.circle(self.texture,(0,255,0,0),(320,230),180,width=3)
+                self.text.fill((255,255,0),rect=None, special_flags=pygame.BLEND_RGB_SUB)
+                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+        
+            if self.clickStateToggle:
+                if self.clickState:
+                    self.text.fill((255,255,0),rect=None, special_flags=pygame.BLEND_RGB_ADD)
                 
                         
             

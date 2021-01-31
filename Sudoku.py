@@ -16,15 +16,15 @@ class Sudoku:
         self.number16 = ['1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G']
         self.remplissage(self.base)
         self.vidage(3,5)
-        self.stringCompteur = ""
+        self.stringCompteur = "00:00:00"
 
         self.backgroundGrille = elmt.element(0,0,"case.png")
         if self.base == 3:
             self.backgroundGrille.setTexture(pygame.transform.scale(self.backgroundGrille.texture,(440,440)))
             self.backgroundGrille.setPosition(610 - self.backgroundGrille.texture_rect.centerx,400 - self.backgroundGrille.texture_rect.centery)
         elif self.base == 4:
-            self.backgroundGrille.setTexture(pygame.transform.scale(self.backgroundGrille.texture,(783,783)))
-            self.backgroundGrille.setPosition(610 - self.backgroundGrille.texture_rect.centerx,743 - self.backgroundGrille.texture_rect.centery)
+            self.backgroundGrille.setTexture(pygame.transform.scale(self.backgroundGrille.texture,(710,710)))
+            self.backgroundGrille.setPosition(760 - self.backgroundGrille.texture_rect.centerx,400 - self.backgroundGrille.texture_rect.centery)
         self.initRender()
     
     def initRender(self):
@@ -77,13 +77,18 @@ class Sudoku:
         return True 
 
     def remplissage(self, base):
+        if self.base == 3:
+            number = self.number9
+        elif self.base == 4:
+            number = self.number16
+
         size = self.taille*self.taille
         for i in range(0,size):
             row=i//self.taille
             col=i%self.taille
             if self.grille[row][col]==0:
-                shuffle(self.number9)      
-                for value in self.number9:
+                shuffle(number)      
+                for value in number:
                     if not(value in self.grille[row]):
                         
                         # if base == 3:
@@ -270,16 +275,20 @@ class Sudoku:
                         if self.base == 3:
                             buttonList = ["[1]","[2]","[3]","[4]","[5]","[6]","[7]","[8]","[9]","backspace"]
                         elif self.base == 4:
-                            buttonList = ("[1]","[2]","[3]","[4]","[5]","[6]","[7]","[8]","[9]","A","[b]","[c]","[d]","[e]","[f]","[g]","backspace")    
+                            buttonList = ("[1]","[2]","[3]","[4]","[5]","[6]","[7]","[8]","[9]","a","b","c","d","e","f","g","backspace")    
                         if pygame.key.name(event.key) in buttonList:
                             if pygame.key.name(event.key) == "backspace":
                                 case.indices = []
                                 self.grilleDeJeu[case.grillePos[0]][case.grillePos[1]] = ' '
                                 case.setText(self.font.render(' ', True,(120,120,120)))
                                 case.clickState = False
-                            else:    
-                                self.grilleDeJeu[case.grillePos[0]][case.grillePos[1]] = pygame.key.name(event.key)[1]
-                                case.setText(self.font.render(pygame.key.name(event.key)[1], True,(120,120,120)))
+                            else:
+                                if len(pygame.key.name(event.key)) > 1:
+                                    self.grilleDeJeu[case.grillePos[0]][case.grillePos[1]] = pygame.key.name(event.key)[1]
+                                    case.setText(self.font.render(pygame.key.name(event.key)[1], True,(120,120,120)))
+                                else:
+                                    self.grilleDeJeu[case.grillePos[0]][case.grillePos[1]] = pygame.key.name(event.key).upper()
+                                    case.setText(self.font.render(pygame.key.name(event.key).upper(), True,(120,120,120)))
                                 case.clickState = False
                 else:
                     if not case.rightClickState:
@@ -296,7 +305,7 @@ class Sudoku:
     def loadMenu(self):
         root = Tk()
         root.withdraw()
-        return self.load(filedialog.askopenfilename(initialdir = "./", filetypes=(("Fichier Grille", ".sudoku"), ('Tout Fichier', "*.*"))))
+        return self.load(filedialog.askopenfilename(initialdir = "./saves/", filetypes=(("Fichier Grille", ".sudoku"), ('Tout Fichier', "*.*"))))
         
     def load(self, path):
         try:
@@ -321,7 +330,7 @@ class Sudoku:
 
     def save(self):
         dateNow = datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
-        path = str(getcwd()+'\\'+'grille_'+dateNow+'.sudoku')
+        path = str(getcwd()+'\\saves\\'+'grille_'+dateNow+'.sudoku')
         with open(path, mode="w") as fichier:
             # Les etapes en ecriture sur le fichier
             grilleActu = ""

@@ -75,6 +75,14 @@ class Jeu:
                     self.launchSudoku(4)
                     self.layoutEnCours = "Jeu"
                     self.sound_manager.playXTime('vent')
+                    x = 10
+                    y = 200
+                    for button in self.jeuLayout.listElmtManager[0].elements:
+                        button.setPosition(x,y)
+                        y= y + 150
+                    self.jeuLayout.listElmtManager[1].elements[0].setPosition(50,40)
+
+
 
             if self.layoutEnCours == "Jeu":
                 if not self.timer:
@@ -96,7 +104,8 @@ class Jeu:
                         self.Pause = True
                     else:
                         self.Pause = False
-                self.sudoku.event(event)
+                if not self.Pause:
+                    self.sudoku.event(event)
                 if event.type ==  pygame.USEREVENT + 1:
                     if not self.Pause:
                         self.seconde = self.seconde + 1
@@ -128,14 +137,13 @@ class Jeu:
         self.sudoku.afficher()
 
     def update(self):
-
         for petal in self.sakuraPetalManager.elements:
             if self.sakuraDelay < petal.action[2]:
                 pass
             else:
                 petal.texture_rect.x = petal.texture_rect.x + petal.action[0]
                 petal.texture_rect.y = petal.texture_rect.y + petal.action[1]
-                if petal.texture_rect.y > 720:
+                if petal.texture_rect.y > self.screen.get_height():
                     petal.texture_rect.y = -50
                     petal.texture_rect.x = randint(-500,1000)
         if self.sakuraDelay <= 600:
@@ -259,25 +267,29 @@ class Jeu:
         compteur.setText(self.font.render("00:00:00", True,(0,0,0)))
         otherElmManagerJeu.addElement(compteur)
 
-        buttonVerif = elmt.element(505,720,"buttonRect.png")
-        buttonVerif.setTexture(pygame.transform.scale(buttonVerif.texture,(200,80)))
-        buttonVerif.setText(pygame.transform.scale(self.font.render('Verifier', True,(0,0,0)),(150,70)))
+        buttonVerif = elmt.element(420,620,"buttonRect.png")
+        buttonVerif.setTexture(pygame.transform.scale(buttonVerif.texture,(400,180)))
+        buttonVerif.setText(self.font.render('Verifier', True,(0,0,0)))
         buttonVerif.clickable = True
         buttonVerif.action = "Verif"
+        buttonVerif.hoverable = True
         buttonManagerJeu.addElement(buttonVerif)
 
-        buttonSauvegarder = elmt.element(250,720,"buttonRect.png")
-        buttonSauvegarder.setTexture(pygame.transform.scale(buttonSauvegarder.texture,(200,80)))
+        buttonSauvegarder = elmt.element(100,620,"buttonRect.png")
+        buttonSauvegarder.setTexture(pygame.transform.scale(buttonSauvegarder.texture,(400,180)))
         buttonSauvegarder.setText(pygame.transform.scale(self.font.render('Sauvegarder', True,(0,0,0)),(150,50)))
         buttonSauvegarder.clickable = True
         buttonSauvegarder.action = "Sauvegarder"
+        buttonSauvegarder.hoverable = True
         buttonManagerJeu.addElement(buttonSauvegarder)
 
-        buttonPause = elmt.element(760,720,"buttonRect.png")
-        buttonPause.setTexture(pygame.transform.scale(buttonPause.texture,(200,80)))
-        buttonPause.setText(pygame.transform.scale(self.font.render('Pause', True,(0,0,0)),(150,70)))
+        buttonPause = elmt.element(740,620,"buttonRect.png")
+        buttonPause.setTexture(pygame.transform.scale(buttonPause.texture,(400,180)))
+        buttonPause.setText(self.font.render('Pause', True,(0,0,0)))
         buttonPause.clickable = True
         buttonPause.action = "Pause"
+        buttonPause.hoverable = True
+        buttonPause.clickStateToggle = True
         buttonManagerJeu.addElement(buttonPause)
 
         #====================== Initialisation des Layouts ===========================
