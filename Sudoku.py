@@ -328,7 +328,8 @@ class Sudoku:
                     content = fichier.readline()
                     for i in range(self.taille*self.taille):
                         self.grille[i//self.taille][i%self.taille] = content[i]
-                    self.stringCompteur = fichier.readline()
+                    self.stringCompteur = fichier.readline()[0:8]
+                    self.trys = int(fichier.readline())
                 self.init()
                 fichier.close()
                 return True
@@ -354,6 +355,8 @@ class Sudoku:
             fichier.write(grilleFinale)
             fichier.write('\n')
             fichier.write(self.stringCompteur)
+            fichier.write('\n')
+            fichier.write(str(self.trys))
             print(path)
             fichier.close()
 

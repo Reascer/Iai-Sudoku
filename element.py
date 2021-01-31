@@ -9,8 +9,11 @@ class element:
         self.clickState = False
         self.clickStateToggle = False
         self.hoverable = False
+        self.hovered = False
         self.click = False
         self.texture_rect = pygame.Rect(pos_x,pos_y,0,0)
+        self.texture = None
+        self.centerText = True
         if textureName is not None:
             self.texture = pygame.image.load("ressources/" + textureName)
             self.texture_rect = self.texture.get_rect()
@@ -42,16 +45,21 @@ class element:
         if self.hoverable:
             if self.texture_rect.collidepoint(pygame.mouse.get_pos()):
                 mouse_pos = (pygame.mouse.get_pos()[0] - self.texture_rect.x , pygame.mouse.get_pos()[1] - self.texture_rect.y)
-                if not self.texture.get_at(mouse_pos)[3] == 0:
-                    self.text.fill((255,255,0),rect=None, special_flags=pygame.BLEND_RGB_ADD)
-                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                if self.alphaClickable:
+                    if not self.texture.get_at(mouse_pos)[3] == 0:
+                        self.text.fill((255,255,0),rect=None, special_flags=pygame.BLEND_RGB_ADD)
+                        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                    else:
+                        self.text.fill((255,255,0),rect=None, special_flags=pygame.BLEND_RGB_SUB)
+                        pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
                 else:
-                    self.text.fill((255,255,0),rect=None, special_flags=pygame.BLEND_RGB_SUB)
-                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+                    if self.texture.get_at(mouse_pos)[3] == 0:
+                        self.text.fill((255,255,0),rect=None, special_flags=pygame.BLEND_RGB_ADD)
+                    else:
+                        self.text.fill((255,255,0),rect=None, special_flags=pygame.BLEND_RGB_SUB)
             else:
                 self.text.fill((255,255,0),rect=None, special_flags=pygame.BLEND_RGB_SUB)
-                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-        
+
             if self.clickStateToggle:
                 if self.clickState:
                     self.text.fill((255,255,0),rect=None, special_flags=pygame.BLEND_RGB_ADD)
@@ -60,9 +68,13 @@ class element:
             
 
     def render(self,screen):
-        screen.blit(self.texture, (self.texture_rect.x, self.texture_rect.y))
+        if self.texture is not None:
+            screen.blit(self.texture, (self.texture_rect.x, self.texture_rect.y))
         if self.text is not None:
-            self.renderTextCenter(screen)
+            if self.centerText:
+                self.renderTextCenter(screen)
+            else:
+                screen.blit(self.text, (self.texture_rect.x, self.texture_rect.y))
             
 
     def setPosition(self,pos_x,pos_y):

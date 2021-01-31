@@ -58,22 +58,29 @@ class Jeu:
                     pygame.display.flip()
                     ok = self.sudoku.loadMenu()
                     if ok == True:
+                        vie = ''
+                        for i in range(self.sudoku.trys):
+                            vie = vie + 'O'
+                            if i != self.sudoku.trys-1:
+                                vie = vie + ' '
+                        self.jeuLayout.listElmtManager[0].elements[1].setText(self.font.render(vie, True,(0,190,0)))
                         self.sound_manager.playXTime('vent')
                         self.heure = int(self.sudoku.stringCompteur[0:2])
                         self.minute = int(self.sudoku.stringCompteur[3:5])
                         self.seconde = int(self.sudoku.stringCompteur[6:8])
-                        self.jeuLayout.listElmtManager[1].elements[0].setText(self.font.render(self.sudoku.stringCompteur, True,(0,0,0)))
+                        self.jeuLayout.listElmtManager[0].elements[0].setText(self.font.render(self.sudoku.stringCompteur, True,(0,0,0)))
                         if self.sudoku.base == 4:
                             x = 10
                             y = 200
                             i = 0
-                            for button in self.jeuLayout.listElmtManager[0].elements:
+                            for button in self.jeuLayout.listElmtManager[1].elements:
                                 i = i + 1
                                 button.setPosition(x,y)
                                 y = y + 150
                                 if i == 3:
                                     break
-                            self.jeuLayout.listElmtManager[1].elements[0].setPosition(50,40)
+                            self.jeuLayout.listElmtManager[0].elements[1].setPosition(70,130)
+                            self.jeuLayout.listElmtManager[0].elements[0].setPosition(50,40)
                         self.layoutEnCours = "Jeu"
             if self.layoutEnCours == 'ChoixGrille':
                 action = self.choixGrille.event(event)
@@ -92,20 +99,47 @@ class Jeu:
                     self.layoutEnCours = "Jeu"
                     self.sound_manager.playXTime('vent')
                     x = 10
-                    y = 200
+                    y = 220
                     i = 0
-                    for button in self.jeuLayout.listElmtManager[0].elements:
+                    for button in self.jeuLayout.listElmtManager[1].elements:
                         i = i + 1
                         button.setPosition(x,y)
                         y= y + 150
                         if i == 3:
                             break
-                    self.jeuLayout.listElmtManager[1].elements[0].setPosition(50,40)
+                    self.jeuLayout.listElmtManager[0].elements[0].setPosition(50,45)
+                    self.jeuLayout.listElmtManager[0].elements[1].setPosition(70,135)
+
             if self.layoutEnCours == "Jeu":
                 if not self.timer:
                     pygame.time.set_timer( pygame.USEREVENT + 1,1000)
                     self.timer = True
                 action = self.jeuLayout.event(event)
+                if action == 'Ready':
+                    self.Pause = False
+                    self.sound_manager.playOneTime('hajime')
+                    self.jeuLayout.listElmtManager[1].elements.pop()
+                    for button in self.jeuLayout.listElmtManager[1].elements:
+                        button.clickable = True
+                        button.hoverable = True
+
+                if action == 'howToPlay':
+                    self.Pause = True
+                    for button in self.jeuLayout.listElmtManager[1].elements:
+                        button.clickable = False
+                        button.hoverable = False
+                    screenTuto = elmt.element(0,0,"tuto.png")
+                    screenTuto.clickable = True
+                    screenTuto.action = "Tuto"
+                    self.jeuLayout.listElmtManager[1].addElement(screenTuto)
+
+                if action == 'Tuto':
+                    self.Pause = False
+                    self.jeuLayout.listElmtManager[1].elements.pop()
+                    for button in self.jeuLayout.listElmtManager[1].elements:
+                        button.clickable = True
+                        button.hoverable = True
+
                 if action == 'Sauvegarder':
                     self.sound_manager.playOneTime('click')
                     self.sudoku.save()
@@ -116,7 +150,7 @@ class Jeu:
                         Banzai = elmt.element(0,0,"Banzai.png")
                         Banzai.clickable = True
                         Banzai.action = "titleScreen"
-                        self.jeuLayout.listElmtManager[1].addElement(Banzai)
+                        self.jeuLayout.listElmtManager[0].addElement(Banzai)
                         print("tu win bro")
                     else:
                         self.sudoku.trys = self.sudoku.trys - 1
@@ -125,22 +159,24 @@ class Jeu:
                             vie = vie + 'O'
                             if i != self.sudoku.trys-1:
                                 vie = vie + ' '
-                        self.jeuLayout.listElmtManager[1].elements[1].setText(self.font.render(vie, True,(0,190,0)))   
-                        self.sound_manager.playOneTime('seppuku')
-                        pygame.time.wait(1000)
-                        self.sound_manager.playOneTime('loose')
+                        self.jeuLayout.listElmtManager[0].elements[1].setText(self.font.render(vie, True,(0,190,0)))   
                         if self.sudoku.trys == 0:
                             self.layoutEnCours = "titleScreen"
+                            self.jeuLayout.listElmtManager[0].elements[1].render(self.screen)
+                            self.Seppuku.render(self.screen)
+                            pygame.display.flip()
+                            self.sound_manager.playOneTime('seppuku')
+                            pygame.time.wait(1000)
+                            self.sound_manager.playOneTime('loose')
+                            pygame.time.wait(2000)
+                        else:
+                            self.sound_manager.playOneTime('loose')
                 if action == 'Pause':
                     self.sound_manager.playOneTime('click')
                     if self.Pause == False:
                         self.Pause = True
                     else:
                         self.Pause = False
-                if action == 'Ready':
-                    self.Pause = False
-                    self.sound_manager.playOneTime('hajime')
-                    self.jeuLayout.listElmtManager[0].elements.pop()
                 if not self.Pause:
                     self.sudoku.event(event)
                 if action == "titleScreen":
@@ -169,7 +205,7 @@ class Jeu:
                         else:
                             stringCompteur = str(self.heure)+':'+ stringCompteur
                         self.sudoku.stringCompteur = stringCompteur
-                        self.jeuLayout.listElmtManager[1].elements[0].setText(self.font.render(stringCompteur, True,(0,0,0)))
+                        self.jeuLayout.listElmtManager[0].elements[0].setText(self.font.render(stringCompteur, True,(0,0,0)))
 
     def launchSudoku(self, base):
         self.sudoku = Sudoku(base)
@@ -178,7 +214,7 @@ class Jeu:
             vie = vie + 'O'
             if i != self.sudoku.trys-1:
                 vie = vie + ' '
-        self.jeuLayout.listElmtManager[1].elements[1].setText(self.font.render(vie, True,(0,190,0)))        
+        self.jeuLayout.listElmtManager[0].elements[1].setText(self.font.render(vie, True,(0,190,0)))        
         self.sudoku.afficher()
 
     def update(self):
@@ -258,6 +294,8 @@ class Jeu:
         textManager.elements.append(Menutitle)
 
         self.loading = elmt.element(0,0,"loading.png")
+        self.Seppuku = elmt.element(0,0,"Seppuku.png")
+
 
         #====================== Bouttons Home Screen ===========================
 
@@ -322,27 +360,37 @@ class Jeu:
         buttonVerif = elmt.element(420,620,"buttonRect.png")
         buttonVerif.setTexture(pygame.transform.scale(buttonVerif.texture,(400,180)))
         buttonVerif.setText(self.font.render('Verifier', True,(0,0,0)))
-        buttonVerif.clickable = True
+        buttonVerif.clickable = False
+        buttonVerif.hoverable = False
         buttonVerif.action = "Verif"
-        buttonVerif.hoverable = True
         buttonManagerJeu.addElement(buttonVerif)
 
         buttonSauvegarder = elmt.element(100,620,"buttonRect.png")
         buttonSauvegarder.setTexture(pygame.transform.scale(buttonSauvegarder.texture,(400,180)))
         buttonSauvegarder.setText(pygame.transform.scale(self.font.render('Sauvegarder', True,(0,0,0)),(150,50)))
-        buttonSauvegarder.clickable = True
+        buttonSauvegarder.clickable = False
+        buttonSauvegarder.hoverable = False
         buttonSauvegarder.action = "Sauvegarder"
-        buttonSauvegarder.hoverable = True
         buttonManagerJeu.addElement(buttonSauvegarder)
 
         buttonPause = elmt.element(740,620,"buttonRect.png")
         buttonPause.setTexture(pygame.transform.scale(buttonPause.texture,(400,180)))
         buttonPause.setText(self.font.render('Pause', True,(0,0,0)))
-        buttonPause.clickable = True
+        buttonPause.clickable = False
+        buttonPause.hoverable = False
         buttonPause.action = "Pause"
-        buttonPause.hoverable = True
         buttonPause.clickStateToggle = True
         buttonManagerJeu.addElement(buttonPause)
+
+        buttonhtp = elmt.element(10,0)
+        buttonhtp.setText(self.font.render('How to play ?', True,(0,0,0)))
+        buttonhtp.setTexture(pygame.Surface((buttonhtp.text.get_rect().w,buttonhtp.text.get_rect().h),pygame.SRCALPHA))
+        buttonhtp.clickable = False
+        buttonhtp.hoverable = False
+        buttonhtp.alphaClickable = False
+        buttonhtp.action = "howToPlay"
+        buttonManagerJeu.addElement(buttonhtp)
+
 
         screenReady = elmt.element(0,0,"Ready.png")
         screenReady.clickable = True
@@ -363,5 +411,5 @@ class Jeu:
         self.choixGrille.addElmtManager(textManager)
 
         self.jeuLayout = Lyt.Layout()
-        self.jeuLayout.addElmtManager(buttonManagerJeu)
         self.jeuLayout.addElmtManager(otherElmManagerJeu)
+        self.jeuLayout.addElmtManager(buttonManagerJeu)
