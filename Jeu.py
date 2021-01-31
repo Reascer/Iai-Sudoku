@@ -45,6 +45,7 @@ class Jeu:
                     self.quit()
                     return True
                 if action == 'SubMenu':
+                    self.subMenu.listElmtManager[0].elements[2].setPosition(820,-10)
                     self.sound_manager.playOneTime('click')
                     self.layoutEnCours = "SubMenu"
             elif self.layoutEnCours == "SubMenu":
@@ -207,7 +208,6 @@ class Jeu:
                 if action == 'Back':
                     self.sound_manager.playOneTime('click')
                     self.layoutEnCours = 'titleScreen'
-                    self.subMenu.listElmtManager[0].elements[2].setPosition(820,-10)
                
                 if not self.Pause:
                     self.sudoku.event(event)
