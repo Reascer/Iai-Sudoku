@@ -12,18 +12,12 @@ class Sudoku:
         self.taille = base * base
         self.grille = [[0 for colone in range(0,self.taille)] for ligne in range(0,self.taille)]
         self.grilleDeJeu = [[0 for colone in range(0,self.taille)] for ligne in range(0,self.taille)]
-<<<<<<< HEAD
         self.number9 = ['1','2','3','4','5','6','7','8','9']
         self.number16 = ['1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G']
         self.remplissage(self.base)
-        self.vidage(3,4)
-
-=======
-        self.number = ['1','2','3','4','5','6','7','8','9']
-        self.remplissage()
         self.vidage(3,5)
         self.stringCompteur = ""
->>>>>>> 04c618cbd91872d8c4836b984efd9d29f08ddbc0
+
 
         self.backgroundGrille = elmt.element(0,0,"case.png")
         self.backgroundGrille.setTexture(pygame.transform.scale(self.backgroundGrille.texture,(440,440)))

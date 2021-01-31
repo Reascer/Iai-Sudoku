@@ -14,16 +14,11 @@ class Jeu:
         self.width = width
         self.height = height
         self.layoutEnCours = "titleScreen"
-<<<<<<< HEAD
         
         # self.sudoku = Sudoku(self.base)
         #self.sudoku.load('grille.txt')
         # self.sudoku.afficher()
         #self.sudoku.save('grille.txt')  --> Faudrait demander un nom au user, puis le reafficher dans une liste ensuite
-=======
-        self.sudoku = Sudoku(3)
-        self.sudoku.afficher()
->>>>>>> 04c618cbd91872d8c4836b984efd9d29f08ddbc0
         self.heure = 0
         self.minute = 0
         self.seconde = 0
@@ -37,13 +32,8 @@ class Jeu:
         pygame.display.set_caption(title) # Mettre le titre sur Iai-sudoku <3
         self.screen = pygame.display.set_mode((1080,720)) # Resize la fenêtre
 
-<<<<<<< HEAD
-        self.font = pygame.font.SysFont("comicsansms", 48) # initialisation des fonts (c'est pour le texte)
-        
-=======
         self.font = pygame.font.SysFont("comicsansms", 30) # initialisaiton des font (c'est pour le texte)
 
->>>>>>> 04c618cbd91872d8c4836b984efd9d29f08ddbc0
         self.initRender()
 
 
@@ -65,12 +55,9 @@ class Jeu:
                 if action == 'Jouer':
                     self.sound_manager.playOneTime('click')
                     self.layoutEnCours = "Jeu"
-<<<<<<< HEAD
                     self.sudoku = Sudoku(self.base)
                     self.sudoku.afficher()
-=======
                     self.sound_manager.playXTime('vent')
->>>>>>> 04c618cbd91872d8c4836b984efd9d29f08ddbc0
                 if action == 'Charger':
                     self.sound_manager.playOneTime('click')
                     ok = self.sudoku.loadMenu()
