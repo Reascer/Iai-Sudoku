@@ -14,6 +14,7 @@ class Jeu:
         self.height = height
         self.layoutEnCours = "titleScreen"
         self.base = base
+        self.sudoku = Sudoku(3)
         # self.sudoku = Sudoku(self.base)
         #self.sudoku.load('grille.txt')
         # self.sudoku.afficher()
@@ -147,7 +148,6 @@ class Jeu:
             self.sakuraPetalManager.renderElements(self.screen)
             self.jeuLayout.render(self.screen)
             self.sudoku.render(self.screen)
-
 
         if self.layoutEnCours == "titleScreen":
             self.backgroundManager.renderElements(self.screen,0)
