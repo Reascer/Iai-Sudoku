@@ -88,6 +88,7 @@ class Jeu:
                             stringCompteur = '0'+str(self.heure)+':'+ stringCompteur
                         else:
                             stringCompteur = str(self.heure)+':'+ stringCompteur
+                        self.sudoku.stringCompteur = stringCompteur
                         self.jeuLayout.listElmtManager[1].elements[0].setText(self.font.render(stringCompteur, True,(0,0,0)))
 
             
@@ -176,7 +177,7 @@ class Jeu:
         otherElmManagerJeu = elmtManager.elementManager()
 
         compteur = elmt.element(380,25,"compteur.png")
-        compteur.setText(pygame.transform.scale(self.font.render("00:00:00", True,(0,0,0)),(200,70)))
+        compteur.setText(self.font.render("00:00:00", True,(0,0,0)))
         otherElmManagerJeu.addElement(compteur)
 
         buttonVerif = elmt.element(440,600,"buttonRect.png")

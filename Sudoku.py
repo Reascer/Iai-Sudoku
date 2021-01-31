@@ -14,8 +14,8 @@ class Sudoku:
         self.grilleDeJeu = [[0 for colone in range(0,self.taille)] for ligne in range(0,self.taille)]
         self.number = ['1','2','3','4','5','6','7','8','9']
         self.remplissage()
-        self.vidage(3//4)
-
+        self.vidage(3,5)
+        self.stringCompteur = ""
 
         self.backgroundGrille = elmt.element(0,0,"case.png")
         self.backgroundGrille.setTexture(pygame.transform.scale(self.backgroundGrille.texture,(440,440)))
@@ -26,7 +26,7 @@ class Sudoku:
         self.cases = []
         x = self.backgroundGrille.texture_rect.x+40
         y = self.backgroundGrille.texture_rect.y+40
-        for i in range(0,self.taille * self.taille):
+        for i in range(0,self.taille * self.taille ):
             if x > 0:
                 x = x - 1
             if i % 3 == 0:
@@ -50,10 +50,10 @@ class Sudoku:
                     y = y + 2
                 x = self.backgroundGrille.texture_rect.x + 40
 
-    def vidage(self,fraction):
-        empties = 81 * 3//5
-        for p in sample(range(81),empties):
-           self.grilleDeJeu[p//9][p%9] = ' '
+    def vidage(self,nomin,denomin):
+        empties = (self.taille * self.taille) * nomin//denomin
+        for p in sample(range((self.taille * self.taille) ),empties):
+           self.grilleDeJeu[p//self.taille][p%self.taille] = ' '
 
     def checkgrille(self):
         for row in range(0,9):
@@ -229,17 +229,23 @@ class Sudoku:
         try:
             with open(path, mode="r") as fichier:
                 # Les etapes en lecture sur le fichier
-                content = fichier.readline()
+                content = fichier.read()
                 if content == "":
                     print("Il n'y a rien a charger.")
                 else:
-                    for i in range(self.taille*self.taille):
-                        self.grilleDeJeu[i//self.taille][i%self.taille] = content[i]
-                    for content in fichier:
-                        i = 0
-                        for l in range(len(self.grille)):
-                            for c in range(len(self.grille)):
+                    i = 0
+                    for l in range(len(self.grille)):
+                        for c in range(len(self.grille)):
+                            if content[i] == "-":
+                                self.grille[l][c] = -content[i + 1]
+                                self.grilleDeJeu[l][c] = -content[i + 1]
+
+                                i += 2
+                            else:
                                 self.grille[l][c] = content[i]
+                                self.grilleDeJeu[l][c] = content[i]
+
+                                
                                 i += 1
                 #self.grilleDeJeu = self.grille.copy()
                 self.initRender()
