@@ -80,6 +80,12 @@ class Jeu:
                                     break
                             self.jeuLayout.listElmtManager[0].elements[1].setPosition(70,130)
                             self.jeuLayout.listElmtManager[0].elements[0].setPosition(50,40)
+                        else:
+                            self.jeuLayout.listElmtManager[0].elements[0].setPosition(450,5)
+                            self.jeuLayout.listElmtManager[0].elements[1].setPosition(470,95)
+                            self.jeuLayout.listElmtManager[1].elements[0].setPosition(420,620)
+                            self.jeuLayout.listElmtManager[1].elements[1].setPosition(100,620)
+                            self.jeuLayout.listElmtManager[1].elements[2].setPosition(740,620)
                         self.layoutEnCours = "Jeu"
                 if action == 'Back':
                     self.sound_manager.playOneTime('click')
@@ -93,6 +99,11 @@ class Jeu:
                     self.launchSudoku(3)
                     self.layoutEnCours = "Jeu"
                     self.sound_manager.playXTime('vent')
+                    self.jeuLayout.listElmtManager[0].elements[0].setPosition(450,5)
+                    self.jeuLayout.listElmtManager[0].elements[1].setPosition(470,95)
+                    self.jeuLayout.listElmtManager[1].elements[0].setPosition(420,620)
+                    self.jeuLayout.listElmtManager[1].elements[1].setPosition(100,620)
+                    self.jeuLayout.listElmtManager[1].elements[2].setPosition(740,620)
                 if action == 'Seize':
                     self.sound_manager.playOneTime('click')
                     self.loading.render(self.screen)
@@ -178,20 +189,25 @@ class Jeu:
                             pygame.time.wait(2000)
                         else:
                             self.sound_manager.playOneTime('loose')
+                
                 if action == 'Pause':
                     self.sound_manager.playOneTime('click')
                     if self.Pause == False:
                         self.Pause = True
                     else:
                         self.Pause = False
+
                 if action == 'Back':
                     self.sound_manager.playOneTime('click')
                     self.layoutEnCours = 'titleScreen'
                     self.subMenu.listElmtManager[0].elements[2].setPosition(820,-10)
+               
                 if not self.Pause:
                     self.sudoku.event(event)
+                
                 if action == "titleScreen":
                     self.layoutEnCours = "titleScreen"
+                
                 if event.type ==  pygame.USEREVENT + 1:
                     if not self.Pause:
                         self.seconde = self.seconde + 1
@@ -219,11 +235,16 @@ class Jeu:
                         self.jeuLayout.listElmtManager[0].elements[0].setText(self.font.render(stringCompteur, True,(0,0,0)))
 
     def launchSudoku(self, base):
+        self.heure = 0
+        self.minute = 0
+        self.seconde = 0
+        self.Pause = True
         screenReady = elmt.element(0,0,"Ready.png")
         screenReady.clickable = True
         screenReady.action = "Ready"
         self.jeuLayout.listElmtManager[1].addElement(screenReady)
         self.sudoku = Sudoku(base)
+        self.jeuLayout.listElmtManager[0].elements[0].setText(self.font.render(self.sudoku.stringCompteur, True,(0,0,0)))
         vie = ''
         for i in range(self.sudoku.trys):
             vie = vie + 'O'
