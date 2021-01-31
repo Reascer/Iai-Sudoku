@@ -114,8 +114,9 @@ class Jeu:
                         self.sound_manager.playOneTime('banzai')
                         print("tu win bro")
                     else:
-                        self.sound_manager.playOneTime('loose')
                         self.sound_manager.playOneTime('seppuku')
+                        pygame.time.wait(1000)
+                        self.sound_manager.playOneTime('loose')
                 if action == 'Pause':
                     self.sound_manager.playOneTime('click')
                     if self.Pause == False:
