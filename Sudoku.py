@@ -230,6 +230,14 @@ class Sudoku:
 
         return etat
 
+    def changeCaseState(self):
+        for i in range(self.taille*self.taille):
+            row = i//self.taille
+            col = i%self.taille
+            if self.grilleDeJeu[row][col] == self.grille[row][col]:
+                if self.cases[i].grilleValeur == ' ':
+                    self.cases[i].grilleValeur = self.grilleDeJeu[row][col]
+                    self.cases[i].setText(self.font.render(self.grilleDeJeu[row][col], True,(20,200,20)))
 #====================== Méthode d'affichage console de la grille pour le dev ===========================#
 
     def afficher(self):

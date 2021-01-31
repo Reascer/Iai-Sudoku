@@ -58,6 +58,11 @@ class Jeu:
                     ok = self.sudoku.loadMenu()
                     if ok == True:
                         vie = ''
+                        self.Pause = True
+                        screenReady = elmt.element(0,0,"Ready.png")
+                        screenReady.clickable = True
+                        screenReady.action = "Ready"
+                        self.jeuLayout.listElmtManager[1].addElement(screenReady)
                         for i in range(self.sudoku.trys):
                             vie = vie + 'O'
                             if i != self.sudoku.trys-1:
@@ -172,6 +177,7 @@ class Jeu:
                         print("tu win bro")
                     else:
                         self.sudoku.trys = self.sudoku.trys - 1
+                        self.sudoku.changeCaseState()
                         vie = ''
                         for i in range(self.sudoku.trys):
                             vie = vie + 'O'
