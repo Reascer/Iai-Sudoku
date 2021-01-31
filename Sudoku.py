@@ -359,8 +359,10 @@ class Sudoku:
     def isFinish(self):
         if self.grille == self.grilleDeJeu:
             print("BANZAÏ !!")
+            return True
         else:
             print("Seppuku...")
+            return False
 
     def __del__(self):
         self.grille = []

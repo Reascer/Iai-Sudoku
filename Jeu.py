@@ -111,7 +111,7 @@ class Jeu:
                     self.sudoku.save()
                 if action == 'Verif':
                     if self.sudoku.isFinish():
-                        self.sound_manager.playOneTime('click')
+                        self.sound_manager.playOneTime('banzai')
                         print("tu win bro")
                     else:
                         self.sound_manager.playOneTime('loose')
