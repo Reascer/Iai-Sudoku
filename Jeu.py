@@ -12,9 +12,7 @@ class Jeu:
         self.height = height
         self.layoutEnCours = "titleScreen"
         self.sudoku = Sudoku(3)
-        #self.sudoku.load('grille.txt')
         self.sudoku.afficher()
-        #self.sudoku.save('grille.txt')  --> Faudrait demander un nom au user, puis le reafficher dans une liste ensuite
         self.heure = 0
         self.minute = 0
         self.seconde = 0
@@ -48,6 +46,9 @@ class Jeu:
                     self.layoutEnCours = "Jeu"
                 if action == 'Charger':
                     ok = self.sudoku.loadMenu()
+                    self.heure = int(self.sudoku.stringCompteur[0:2])
+                    self.minute = int(self.sudoku.stringCompteur[3:5])
+                    self.seconde = int(self.sudoku.stringCompteur[6:8])
                     if ok == True:
                         self.layoutEnCours = "Jeu"
             if self.layoutEnCours == "Jeu":
