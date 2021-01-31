@@ -2,4 +2,4 @@ __pycache__
 __pycache__/Jeu.cpython-39.pyc
 __pycache__/element.cpython-39.pyc
 __pycache__/Sudoku.cpython-39.pyc
-saves/*
+saves/grille.*
