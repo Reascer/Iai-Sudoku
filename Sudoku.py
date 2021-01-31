@@ -6,7 +6,12 @@ import case as cse
 from os import getcwd
 from datetime import datetime
 
+#====================== Classe Grille Sudoku ===========================#
+
 class Sudoku:
+
+#====================== Constructeur de l'objet ===========================#
+
     def __init__(self, base=None):
         if base is not None:
             self.base = base
@@ -14,6 +19,8 @@ class Sudoku:
             self.generate()
             self.init()
             
+#====================== Méthode d'initialisation d'une grille joueur ===========================#
+
     def generate(self):
         self.grille = [[0 for colone in range(0,self.taille)] for ligne in range(0,self.taille)]
         self.grilleDeJeu = [[0 for colone in range(0,self.taille)] for ligne in range(0,self.taille)]
@@ -23,6 +30,8 @@ class Sudoku:
         self.vidage(3,5)
         self.stringCompteur = "00:00:00"
         self.trys = 5
+
+#====================== Initialisation Grille Graphique de jeu ===========================#
 
     def init(self):
         if self.base == 3:
@@ -40,12 +49,9 @@ class Sudoku:
     
     def initRender(self):
         self.cases = []
-        # if self.base==3:
         x = self.backgroundGrille.texture_rect.x+40
         y = self.backgroundGrille.texture_rect.y+40
-        # elif self.base==4:
-        #     x = self.backgroundGrille.texture_rect.x+40
-        #     y = self.backgroundGrille.texture_rect.y+40
+
         for i in range(0,self.taille * self.taille ):
             if x > 0:
                 x = x - 1
@@ -53,16 +59,12 @@ class Sudoku:
                 x = x + 2
             case = cse.case((i//self.taille,i%self.taille),self.grilleDeJeu[i//self.taille][i%self.taille],x,y,self.buttonList)
             self.font = pygame.font.SysFont("comicsansms", 20)
-            # if self.base==3:
             case.setTexture(pygame.Surface((40,40),pygame.SRCALPHA))
-            # if self.base==4:
-            #     case.setTexture(pygame.Surface((54,54),pygame.SRCALPHA))
             case.setText(self.font.render(self.grilleDeJeu[i//self.taille][i%self.taille], True,(255,255,255))) # TO CHECK POUR 16x16
             pygame.draw.rect(case.texture,(150,150,255,255),(0,0,40,40),width=1)
             case.clickable = True
             case.alphaClickable = False
             case.clickStateToggle = True
-
             self.cases.append(case)
 
             z = 40
@@ -75,10 +77,14 @@ class Sudoku:
                     y = y + 2
                 x = self.backgroundGrille.texture_rect.x + z
 
+#====================== Méthode de masquage de certains caractères suivant la difficulté ===========================#
+
     def vidage(self,nomin,denomin):
         empties = (self.taille * self.taille) * nomin//denomin
         for p in sample(range((self.taille * self.taille) ),empties):
            self.grilleDeJeu[p//self.taille][p%self.taille] = ' '
+
+#====================== Vérification que la grille soit bien remplie ===========================#
 
     def checkgrille(self):
         for row in range(0,self.taille):
@@ -86,6 +92,8 @@ class Sudoku:
                 if self.grille[row][col]==0:
                     return False
         return True 
+
+#====================== Algorithme de création d'une grille sans pattern visible ===========================#
 
     def remplissage(self, base):
         if self.base == 3:
@@ -160,6 +168,8 @@ class Sudoku:
                 break
         self.grille[row][col]=0
 
+#====================== Méthode de vérification de la grille ===========================#
+
     def isValide(self):
         etat = True
         for l in range(len(self.grille)):
@@ -211,23 +221,16 @@ class Sudoku:
                         square = [self.grille[i][line*line:line**line] for i in range(line**line, entier)]
                     else:
                         square = [self.grille[i][line**line:entier] for i in range(line**line, entier)]
-                
-                
-                
-                # if self.base == 3:        
-                    # bloc = (square[0] + square[1] + square[2])                    
+                                  
                 bloc = list([square[i] for i in range (0, self.base-1)])
                 if target in bloc:
                     bloc.remove(target)
                     if target in bloc:
                         etat = False
-                # if self.base == 4:        
-                #     bloc = (square[0] + square[1] + square[2] + square[3])
-                    # if target in bloc:
-                    #     bloc.remove(target)
-                    #     if target in bloc:
-                    #         etat = False
+
         return etat
+
+#====================== Méthode d'affichage console de la grille pour le dev ===========================#
 
     def afficher(self):
         def interligne(taille):
@@ -260,6 +263,8 @@ class Sudoku:
         for case in self.cases :
             case.render(screen)
     
+#====================== Gestion des events Utilisateur pendant la partie ===========================#
+
     def event(self,event):
         if event.type == pygame.KEYDOWN:
             if pygame.key.name(event.key) == "escape":
@@ -303,6 +308,8 @@ class Sudoku:
                         pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
                         pygame.draw.rect(case.texture,(0,0,0,0),(1,1,38,38),width=1)
             
+#====================== Méthodes de chargement d'une grille depuis un .sudoku ===========================#
+
     def loadMenu(self):
         root = Tk()
         root.withdraw()
@@ -336,11 +343,12 @@ class Sudoku:
             print("Il n'y a rien a charger.")
             return False
 
+#====================== Méthode de sauvegarde d'une grille ===========================#
+
     def save(self):
         dateNow = datetime.now().strftime("%d-%m-%Y-%H-%M-%S")
         path = str(getcwd()+'\\saves\\'+'grille_'+dateNow+'.sudoku')
-        with open(path, mode="w") as fichier:
-            # Les etapes en ecriture sur le fichier
+        with open(path, mode="w") as fichier:            
             grilleActu = ""
             for l in range(len(self.grilleDeJeu)):
                 for c in range(len(self.grilleDeJeu)):
@@ -357,6 +365,8 @@ class Sudoku:
             print(path)
             fichier.close()
 
+#====================== Test condition de victoire ===========================#
+
     def isFinish(self):
         if self.grille == self.grilleDeJeu:
             print("BANZAÏ !!")
@@ -364,6 +374,8 @@ class Sudoku:
         else:
             print("Seppuku...")
             return False
+
+#====================== Destructeur de l'objet ===========================#
 
     def __del__(self):
         self.grille = []
