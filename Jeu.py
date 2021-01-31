@@ -47,7 +47,7 @@ class Jeu:
                 if action == 'SubMenu':
                     self.sound_manager.playOneTime('click')
                     self.layoutEnCours = "SubMenu"
-            if self.layoutEnCours == "SubMenu":
+            elif self.layoutEnCours == "SubMenu":
                 action = self.subMenu.event(event)
                 if action == 'Jouer':
                     self.sound_manager.playOneTime('click')
@@ -82,7 +82,10 @@ class Jeu:
                             self.jeuLayout.listElmtManager[0].elements[1].setPosition(70,130)
                             self.jeuLayout.listElmtManager[0].elements[0].setPosition(50,40)
                         self.layoutEnCours = "Jeu"
-            if self.layoutEnCours == 'ChoixGrille':
+                if action == 'Back':
+                    self.sound_manager.playOneTime('click')
+                    self.layoutEnCours = 'titleScreen'
+            elif self.layoutEnCours == 'ChoixGrille':
                 action = self.choixGrille.event(event)
                 if action == 'Neuf':
                     self.sound_manager.playOneTime('click')
@@ -99,19 +102,23 @@ class Jeu:
                     self.layoutEnCours = "Jeu"
                     self.sound_manager.playXTime('vent')
                     x = 10
-                    y = 220
+                    y = 210
                     i = 0
                     for button in self.jeuLayout.listElmtManager[1].elements:
                         i = i + 1
                         button.setPosition(x,y)
-                        y= y + 150
-                        if i == 3:
+                        y= y + 130
+                        if i == 4:
                             break
                     self.jeuLayout.listElmtManager[0].elements[0].setPosition(50,45)
                     self.jeuLayout.listElmtManager[0].elements[1].setPosition(70,135)
 
-            if self.layoutEnCours == "Jeu":
+                if action == 'Back':
+                    self.sound_manager.playOneTime('click')
+                    self.layoutEnCours = 'titleScreen'
+            elif self.layoutEnCours == "Jeu":
                 if not self.timer:
+                    self.jeuLayout.listElmtManager[1].elements[4].hoverable = False
                     pygame.time.set_timer( pygame.USEREVENT + 1,1000)
                     self.timer = True
                 action = self.jeuLayout.event(event)
@@ -143,6 +150,7 @@ class Jeu:
                 if action == 'Sauvegarder':
                     self.sound_manager.playOneTime('click')
                     self.sudoku.save()
+
                 if action == 'Verif':
                     if self.sudoku.isFinish():
                         self.sound_manager.playOneTime('banzai')
@@ -177,6 +185,10 @@ class Jeu:
                         self.Pause = True
                     else:
                         self.Pause = False
+                if action == 'Back':
+                    self.sound_manager.playOneTime('click')
+                    self.layoutEnCours = 'titleScreen'
+                    self.subMenu.listElmtManager[0].elements[2].setPosition(820,-10)
                 if not self.Pause:
                     self.sudoku.event(event)
                 if action == "titleScreen":
@@ -208,6 +220,10 @@ class Jeu:
                         self.jeuLayout.listElmtManager[0].elements[0].setText(self.font.render(stringCompteur, True,(0,0,0)))
 
     def launchSudoku(self, base):
+        screenReady = elmt.element(0,0,"Ready.png")
+        screenReady.clickable = True
+        screenReady.action = "Ready"
+        self.jeuLayout.listElmtManager[1].addElement(screenReady)
         self.sudoku = Sudoku(base)
         vie = ''
         for i in range(self.sudoku.trys):
@@ -382,20 +398,28 @@ class Jeu:
         buttonPause.clickStateToggle = True
         buttonManagerJeu.addElement(buttonPause)
 
-        buttonhtp = elmt.element(10,0)
+        buttonhtp = elmt.element(120,0)
         buttonhtp.setText(self.font.render('How to play ?', True,(0,0,0)))
         buttonhtp.setTexture(pygame.Surface((buttonhtp.text.get_rect().w,buttonhtp.text.get_rect().h),pygame.SRCALPHA))
         buttonhtp.clickable = False
         buttonhtp.hoverable = False
         buttonhtp.alphaClickable = False
         buttonhtp.action = "howToPlay"
+
+
+        #====================== Bouttons Back to Home ===========================
+
+        buttonBack = elmt.element(820,-10,"buttonRect.png")
+        buttonBack.setTexture(pygame.transform.scale(buttonBack.texture,(400,180)))
+        buttonBack.setText(pygame.font.SysFont("comicsansms", 44).render('Menu', True,(0,0,0)))
+        buttonBack.clickable = True
+        buttonBack.action = "Back"
+        buttonBack.hoverable = True
+        buttonManagerSub.addElement(buttonBack)
+        buttonManagerGrille.addElement(buttonBack)
+        buttonManagerJeu.addElement(buttonBack)
         buttonManagerJeu.addElement(buttonhtp)
-
-
-        screenReady = elmt.element(0,0,"Ready.png")
-        screenReady.clickable = True
-        screenReady.action = "Ready"
-        buttonManagerJeu.addElement(screenReady)
+        
         #====================== Initialisation des Layouts ===========================
 
         self.titleScreen = Lyt.Layout()
