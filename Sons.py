@@ -7,6 +7,7 @@ class SoundManager:
             'vent': pygame.mixer.Sound('ressources/vent.wav'),
             'hajime': pygame.mixer.Sound('ressources/hajime.wav'),
             'banzai': pygame.mixer.Sound('ressources/banzai.wav'),
+            'seppuku': pygame.mixer.Sound('ressources/seppuku.wav'),
             'click': pygame.mixer.Sound('ressources/click.wav')
         }
 

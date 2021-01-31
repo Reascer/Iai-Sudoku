@@ -126,6 +126,8 @@ class Jeu:
                             if i != self.sudoku.trys-1:
                                 vie = vie + ' '
                         self.jeuLayout.listElmtManager[1].elements[1].setText(self.font.render(vie, True,(0,190,0)))   
+                        self.sound_manager.playOneTime('seppuku')
+                        pygame.time.wait(1000)
                         self.sound_manager.playOneTime('loose')
                         if self.sudoku.trys == 0:
                             self.layoutEnCours = "titleScreen"
