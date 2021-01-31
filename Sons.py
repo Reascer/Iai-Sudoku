@@ -5,6 +5,7 @@ class SoundManager:
         self.sounds = {
             'loose': pygame.mixer.Sound('ressources/loose.mp3'),
             'vent': pygame.mixer.Sound('ressources/vent.wav'),
+            'hajime': pygame.mixer.Sound('ressources/hajime.wav'),
             'click': pygame.mixer.Sound('ressources/click.wav')
         }
 

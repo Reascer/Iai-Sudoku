@@ -101,9 +101,6 @@ class Jeu:
                         if i == 3:
                             break
                     self.jeuLayout.listElmtManager[1].elements[0].setPosition(50,40)
-
-
-
             if self.layoutEnCours == "Jeu":
                 if not self.timer:
                     pygame.time.set_timer( pygame.USEREVENT + 1,1000)
@@ -126,6 +123,7 @@ class Jeu:
                         self.Pause = False
                 if action == 'Ready':
                     self.Pause = False
+                    self.sound_manager.playOneTime('hajime')
                     self.jeuLayout.listElmtManager[0].elements.pop()
                 if not self.Pause:
                     self.sudoku.event(event)
