@@ -4,6 +4,7 @@ import elementManager as elmtManager
 from Sons import SoundManager
 from Sudoku import Sudoku
 import Layout as Lyt
+from random import randint
 
 class Jeu:
     def __init__(self,title,width,height):
@@ -20,13 +21,15 @@ class Jeu:
         self.running = True
         self.timer = False
         self.Pause = False
+
+        self.sakuraDelay = 0
         self.sound_manager = SoundManager()
 
         pygame.display.set_caption(title) # Mettre le titre sur Iai-sudoku <3
         self.screen = pygame.display.set_mode((1080,720)) # Resize la fenêtre
 
-        self.font = pygame.font.SysFont("comicsansms", 48) # initialisaiton des font (c'est pour le texte)
-        
+        self.font = pygame.font.SysFont("comicsansms", 30) # initialisaiton des font (c'est pour le texte)
+
         self.initRender()
 
 
@@ -40,10 +43,10 @@ class Jeu:
                 if action == 'Quitter':
                     self.quit()
                     return True
-                if action == 'SubMenu':                    
+                if action == 'SubMenu':
                     self.layoutEnCours = "SubMenu"
             if self.layoutEnCours == "SubMenu":
-                action = self.subMenu.event(event)                
+                action = self.subMenu.event(event)
                 if action == 'Jouer':
                     self.layoutEnCours = "Jeu"
                     self.sound_manager.playXTime('vent')
@@ -54,6 +57,7 @@ class Jeu:
                         self.heure = int(self.sudoku.stringCompteur[0:2])
                         self.minute = int(self.sudoku.stringCompteur[3:5])
                         self.seconde = int(self.sudoku.stringCompteur[6:8])
+                        self.jeuLayout.listElmtManager[1].elements[0].setText(self.font.render(self.sudoku.stringCompteur, True,(0,0,0)))
                         self.layoutEnCours = "Jeu"
             if self.layoutEnCours == "Jeu":
                 if not self.timer:
@@ -99,44 +103,60 @@ class Jeu:
                         self.sudoku.stringCompteur = stringCompteur
                         self.jeuLayout.listElmtManager[1].elements[0].setText(self.font.render(stringCompteur, True,(0,0,0)))
 
-            
+
     def update(self):
-        pass
+
+        for petal in self.sakuraPetalManager.elements:
+            if self.sakuraDelay < petal.action[2]:
+                pass
+            else:
+                petal.texture_rect.x = petal.texture_rect.x + petal.action[0]
+                petal.texture_rect.y = petal.texture_rect.y + petal.action[1]
+                if petal.texture_rect.y > 720:
+                    petal.texture_rect.y = -50
+                    petal.texture_rect.x = randint(-500,1000)
+        if self.sakuraDelay <= 600:
+            self.sakuraDelay = self.sakuraDelay + 1
+
 
     def render(self):
         if self.layoutEnCours == 'Jeu':
             self.backgroundManager.renderElements(self.screen,1)
+            self.sakuraPetalManager.renderElements(self.screen)
             self.jeuLayout.render(self.screen)
             self.sudoku.render(self.screen)
 
 
         if self.layoutEnCours == "titleScreen":
             self.backgroundManager.renderElements(self.screen,0)
+            self.sakuraPetalManager.renderElements(self.screen)
             self.titleScreen.render(self.screen)
 
         if self.layoutEnCours == "SubMenu":
             self.backgroundManager.renderElements(self.screen,0)
+            self.sakuraPetalManager.renderElements(self.screen)
             self.subMenu.render(self.screen)
 
 
         pygame.display.flip()
-    
+
     def quit(self):
         self.running = False
         pygame.quit()
         print("end of game")
-    
+
     #Ajouter les elements dans l'initRender
-    
+
     def initRender(self):
         self.backgroundManager = elmtManager.elementManager()
+        self.sakuraPetalManager = elmtManager.elementManager()
         textManager = elmtManager.elementManager()
         buttonManager = elmtManager.elementManager()
         buttonManagerSub = elmtManager.elementManager()
         buttonManagerJeu = elmtManager.elementManager()
 
         #====================== element a ajouter ===========================
-        
+
         titleBackground = elmt.element(0,0,"sakuraBackground.jpg")
         titleBackground.texture = pygame.transform.scale(titleBackground.texture,(1080,720))
         self.backgroundManager.addElement(titleBackground)
@@ -145,36 +165,42 @@ class Jeu:
         jeuBackground.texture = pygame.transform.scale(jeuBackground.texture,(1080,720))
         self.backgroundManager.addElement(jeuBackground)
 
-        Menutitle = elmt.element(100,100)
-        Menutitle.setTexture(self.font.render('Iai-sudoku', True,(0,0,0))) # pour les parametres: le text , je sais plus mais true du coup , la couleur du text en RGB
+        for i in range(50):
+            petal = elmt.element(randint(-500,1000),-50,"sakuraPetal.png")
+            petal.texture = pygame.transform.scale(petal.texture,(40,40))
+            petal.action = (randint(0,4),randint(0,2),randint(0,600))
+            self.sakuraPetalManager.addElement(petal)
+
+        Menutitle = elmt.element(300,200,"title.png")
+        petal.texture = pygame.transform.scale(petal.texture,(40,40))
         textManager.elements.append(Menutitle)
-        
+
         #====================== Bouttons Home Screen ===========================
-        
-        buttonPlay = elmt.element(255,400,"button.png")
-        buttonPlay.setText(self.font.render('Play', True,(0,0,0)))
+
+        buttonPlay = elmt.element(5,300,"button.png")
+        buttonPlay.setText(pygame.font.SysFont("comicsansms", 48).render('Play', True,(0,0,0)))
         buttonPlay.clickable = True
         buttonPlay.action = "SubMenu"
         buttonPlay.hoverable = True
         buttonManager.addElement(buttonPlay)
 
-        buttonQuitter = elmt.element(600,400,"button.png")
+        buttonQuitter = elmt.element(450,300,"button.png")
         buttonQuitter.setText(self.font.render('Quitter', True,(0,0,0)))
         buttonQuitter.clickable = True
         buttonQuitter.action = "Quitter"
         buttonQuitter.hoverable = True
         buttonManager.addElement(buttonQuitter)
-        
+
         #====================== Bouttons Sous Menu ===========================
-        
-        buttonNew = elmt.element(250,200,"button.png")
+
+        buttonNew = elmt.element(50,100,"button.png")
         buttonNew.setText(self.font.render('Nouveau', True,(0,0,0)))
         buttonNew.clickable = True
         buttonNew.action = "Jouer"
         buttonNew.hoverable = True
         buttonManagerSub.addElement(buttonNew)
 
-        buttonLoad = elmt.element(650,200,"button.png")
+        buttonLoad = elmt.element(450,100,"button.png")
         buttonLoad.setText(self.font.render('Charger', True,(0,0,0)))
         buttonLoad.clickable = True
         buttonLoad.action = "Charger"
@@ -221,7 +247,3 @@ class Jeu:
         self.jeuLayout = Lyt.Layout()
         self.jeuLayout.addElmtManager(buttonManagerJeu)
         self.jeuLayout.addElmtManager(otherElmManagerJeu)
-
-
-        
-        
