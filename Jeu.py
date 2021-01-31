@@ -22,7 +22,7 @@ class Jeu:
         self.seconde = 0
         self.running = True
         self.timer = False
-        self.Pause = False
+        self.Pause = True
         self.sudoku = Sudoku()
         self.sakuraDelay = 0
         self.sound_manager = SoundManager()
@@ -117,6 +117,9 @@ class Jeu:
                         self.Pause = True
                     else:
                         self.Pause = False
+                if action == 'Ready':
+                    self.Pause = False
+                    self.jeuLayout.listElmtManager[0].elements.pop()
                 if not self.Pause:
                     self.sudoku.event(event)
                 if event.type ==  pygame.USEREVENT + 1:
@@ -167,8 +170,8 @@ class Jeu:
         if self.layoutEnCours == 'Jeu':
             self.backgroundManager.renderElements(self.screen,1)
             self.sakuraPetalManager.renderElements(self.screen)
-            self.jeuLayout.render(self.screen)
             self.sudoku.render(self.screen)
+            self.jeuLayout.render(self.screen)
 
         if self.layoutEnCours == "titleScreen":
             self.backgroundManager.renderElements(self.screen,0)
@@ -305,6 +308,11 @@ class Jeu:
         buttonPause.hoverable = True
         buttonPause.clickStateToggle = True
         buttonManagerJeu.addElement(buttonPause)
+
+        screenReady = elmt.element(0,0,"Ready.png")
+        screenReady.clickable = True
+        screenReady.action = "Ready"
+        buttonManagerJeu.addElement(screenReady)
 
         #====================== Initialisation des Layouts ===========================
 
