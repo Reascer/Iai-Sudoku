@@ -12,10 +12,12 @@ class Sudoku:
         self.taille = base * base
         self.grille = [[0 for colone in range(0,self.taille)] for ligne in range(0,self.taille)]
         self.grilleDeJeu = [[0 for colone in range(0,self.taille)] for ligne in range(0,self.taille)]
-        self.number = ['1','2','3','4','5','6','7','8','9']
-        self.remplissage()
+        self.number9 = ['1','2','3','4','5','6','7','8','9']
+        self.number16 = ['1','2','3','4','5','6','7','8','9','A','B','C','D','E','F','G']
+        self.remplissage(self.base)
         self.vidage(3,5)
         self.stringCompteur = ""
+
 
         self.backgroundGrille = elmt.element(0,0,"case.png")
         self.backgroundGrille.setTexture(pygame.transform.scale(self.backgroundGrille.texture,(440,440)))
@@ -29,12 +31,12 @@ class Sudoku:
         for i in range(0,self.taille * self.taille ):
             if x > 0:
                 x = x - 1
-            if i % 3 == 0:
+            if i % self.base == 0:
                 x = x + 2
-            case = cse.case((i//9,i%9),self.grilleDeJeu[i//9][i%9],x,y)
+            case = cse.case((i//self.taille,i%self.taille),self.grilleDeJeu[i//self.taille][i%self.taille],x,y)
             self.font = pygame.font.SysFont("comicsansms", 20)
             case.setTexture(pygame.Surface((40,40),pygame.SRCALPHA))
-            case.setText(self.font.render(self.grilleDeJeu[i//9][i%9], True,(255,255,255)))
+            case.setText(self.font.render(self.grilleDeJeu[i//self.taille][i%self.taille], True,(255,255,255)))
             pygame.draw.rect(case.texture,(150,150,255,255),(0,0,40,40),width=1)
             case.clickable = True
             case.alphaClickable = False
@@ -42,11 +44,11 @@ class Sudoku:
 
             self.cases.append(case)
             x = x + 40
-            if i % 9 == 8:
+            if i % self.taille == self.taille-1:
                 y = y + 40
                 if y > 0:
                     y = y - 1
-                if i // 9 % 3 == 2:
+                if i // self.taille % self.base == self.base-1:
                     y = y + 2
                 x = self.backgroundGrille.texture_rect.x + 40
 
@@ -56,51 +58,78 @@ class Sudoku:
            self.grilleDeJeu[p//self.taille][p%self.taille] = ' '
 
     def checkgrille(self):
-        for row in range(0,9):
-            for col in range(0,9):
+        for row in range(0,self.taille):
+            for col in range(0,self.taille):
                 if self.grille[row][col]==0:
                     return False
         return True 
 
-    def remplissage(self):
-        for i in range(0,81):
-            row=i//9
-            col=i%9
+    def remplissage(self, base):
+        size = self.taille*self.taille
+        for i in range(0,size):
+            row=i//self.taille
+            col=i%self.taille
             if self.grille[row][col]==0:
-                shuffle(self.number)      
-                for value in self.number:
+                shuffle(self.number9)      
+                for value in self.number9:
                     if not(value in self.grille[row]):
                         if not value in (self.grille[0][col],self.grille[1][col],self.grille[2][col],self.grille[3][col],self.grille[4][col],self.grille[5][col],self.grille[6][col],self.grille[7][col],self.grille[8][col]):
+                        # if not value in [self.grille[i][col] in range (0, self.taille-1)]:
                             square=[]
-                            if row<3:
-                                if col<3:
-                                    square=[self.grille[i][0:3] for i in range(0,3)]
-                                elif col<6:
-                                    square=[self.grille[i][3:6] for i in range(0,3)]
-                                else:  
-                                    square=[self.grille[i][6:9] for i in range(0,3)]
-                            elif row<6:
-                                if col<3:
-                                    square=[self.grille[i][0:3] for i in range(3,6)]
-                                elif col<6:
-                                    square=[self.grille[i][3:6] for i in range(3,6)]
-                                else:  
-                                    square=[self.grille[i][6:9] for i in range(3,6)]
-                            else:
-                                if col<3:
-                                    square=[self.grille[i][0:3] for i in range(6,9)]
-                                elif col<6:
-                                    square=[self.grille[i][3:6] for i in range(6,9)]
-                                else:  
-                                    square=[self.grille[i][6:9] for i in range(6,9)]
-                            if not value in (square[0] + square[1] + square[2]):
-                                self.grille[row][col]=value
-                                self.grilleDeJeu[row][col]=value
-                                if self.checkgrille():
-                                    return True
-                                else:
-                                    if self.remplissage():
+                            if row<base:
+                                if col<base:
+                                    square=[self.grille[i][0:base] for i in range(0,base)]
+                                elif col<base*2:
+                                    square=[self.grille[i][base:base*2] for i in range(0,base)]
+                                elif col<base*3:  
+                                    square=[self.grille[i][base*2:base*3] for i in range(0,base)]
+                                elif col<base*4:  
+                                    square=[self.grille[i][base*3:self.taille] for i in range(0,base)]
+                            elif row<base*2:
+                                if col<base:
+                                    square=[self.grille[i][0:base] for i in range(base,base*2)]
+                                elif col<base*2:
+                                    square=[self.grille[i][base:base*2] for i in range(base,base*2)]
+                                elif col<base*3:  
+                                    square=[self.grille[i][base*2:base*3] for i in range(base,base*2)]
+                                elif col<base*4:  
+                                    square=[self.grille[i][base*3:self.taille] for i in range(base,base*2)]
+                            elif row<base*3:
+                                if col<base:
+                                    square=[self.grille[i][0:base] for i in range(base*2,base*3)]
+                                elif col<base*2:
+                                    square=[self.grille[i][base:base*2] for i in range(base*2,base*3)]
+                                elif col<base*3:  
+                                    square=[self.grille[i][base*2:base*3] for i in range(base*2,base*3)]
+                                elif col<base*4:  
+                                    square=[self.grille[i][base*3:self.taille] for i in range(base*2,base*3)]
+                            elif row<base*4:
+                                if col<base:
+                                    square=[self.grille[i][0:base] for i in range(base*3,self.taille)]
+                                elif col<base*2:
+                                    square=[self.grille[i][base:base*2] for i in range(base*3,self.taille)]
+                                elif col<base*3:  
+                                    square=[self.grille[i][base*2:base*3] for i in range(base*3,self.taille)]
+                                elif col<base*4:  
+                                    square=[self.grille[i][base*3:self.taille] for i in range(base*3,self.taille)]
+                            if base == 3:
+                                if not value in (square[0] + square[1] + square[2]):
+                                    self.grille[row][col]=value
+                                    self.grilleDeJeu[row][col]=value
+                                    if self.checkgrille():
                                         return True
+                                    else:
+                                        if self.remplissage(self.base):
+                                            return True
+                            if base == 4:
+                                if not value in (square[0] + square[1] + square[2] + square[3]):
+                                    self.grille[row][col]=value
+                                    self.grilleDeJeu[row][col]=value
+                                    if self.checkgrille():
+                                        return True
+                                    else:
+                                        if self.remplissage(self.base):
+                                            return True
                 break
         self.grille[row][col]=0
 
@@ -117,35 +146,57 @@ class Sudoku:
                 if checkColonne.count(target) > 1:
                     etat = False
                 square = []
-                tier = len(self.grille) // 3
-                tierdouble = (len(self.grille) // 3) * 2
+                line = len(self.grille) // self.base
                 entier = len(self.grille)
-                if l < tier:
-                    if c < tier:
-                        square = [self.grille[i][0:tier] for i in range(0, tier)]
-                    elif c < tierdouble:
-                        square = [self.grille[i][tier:tierdouble] for i in range(0, tier)]
+                if l < line:
+                    if c < line:
+                        square = [self.grille[i][0:line] for i in range(0, line)]
+                    elif c < line*line:
+                        square = [self.grille[i][line:line*line] for i in range(0, line)]
+                    elif c < line**line:
+                        square = [self.grille[i][line*line:line**line] for i in range(0, line)]
+                    elif c < entier:
+                        square = [self.grille[i][line**line:entier] for i in range(0, line)]
+                elif l < line*line:
+                    if c < line:
+                        square = [self.grille[i][0:line] for i in range(line, line*line)]
+                    elif c < line*line:
+                        square = [self.grille[i][line:line*line] for i in range(line, line*line)]
+                    elif c < line**line:
+                        square = [self.grille[i][line*line:line**line] for i in range(line, line*line)]
+                    elif c < entier:
+                        square = [self.grille[i][line**line:entier] for i in range(line, line*line)]
+                elif l < line**line:
+                    if c < line:
+                        square = [self.grille[i][0:line] for i in range(line*line, line**line)]
+                    elif c < line*line:
+                        square = [self.grille[i][line:line*line] for i in range(line*line, line**line)]
+                    elif c < line**line:
+                        square = [self.grille[i][line*line:line**line] for i in range(line*line, line**line)]
+                    elif c < entier:
+                        square = [self.grille[i][line**line:entier] for i in range(line*line, line**line)]
+                elif l < line*4:
+                    if c < line:
+                        square = [self.grille[i][0:line] for i in range(line**line, entier)]
+                    elif c < line*line:
+                        square = [self.grille[i][line:line*line] for i in range(line**line, entier)]
+                    elif c < line**line:
+                        square = [self.grille[i][line*line:line**line] for i in range(line**line, entier)]
                     else:
-                        square = [self.grille[i][tierdouble:entier] for i in range(0, tier)]
-                elif l < tierdouble:
-                    if c < tier:
-                        square = [self.grille[i][0:tier] for i in range(tier, tierdouble)]
-                    elif c < tierdouble:
-                        square = [self.grille[i][tier:tierdouble] for i in range(tier, tierdouble)]
-                    else:
-                        square = [self.grille[i][tierdouble:entier] for i in range(tier, tierdouble)]
-                else:
-                    if c < tier:
-                        square = [self.grille[i][0:tier] for i in range(tierdouble, entier)]
-                    elif c < tierdouble:
-                        square = [self.grille[i][tier:tierdouble] for i in range(tierdouble, entier)]
-                    else:
-                        square = [self.grille[i][tierdouble:entier] for i in range(tierdouble, entier)]
-                bloc = (square[0] + square[1] + square[2])
-                if target in bloc:
-                    bloc.remove(target)
+                        square = [self.grille[i][line**line:entier] for i in range(line**line, entier)]
+                # bloc += [square[i] for i in range (0, self.base-1)]
+                if self.base == 3:        
+                    bloc = (square[0] + square[1] + square[2])
                     if target in bloc:
-                        etat = False
+                        bloc.remove(target)
+                        if target in bloc:
+                            etat = False
+                if self.base == 4:        
+                    bloc = (square[0] + square[1] + square[2] + square[3])
+                    if target in bloc:
+                        bloc.remove(target)
+                        if target in bloc:
+                            etat = False
         return etat
 
     def afficher(self):
@@ -196,7 +247,11 @@ class Sudoku:
                         case2.rightClickState = False
                     pygame.draw.rect(case.texture,(255,120,120,255),(1,1,38,38),width=1)
                     if event.type == pygame.KEYDOWN:
-                        if pygame.key.name(event.key) in ("[1]","[2]","[3]","[4]","[5]","[6]","[7]","[8]","[9]","backspace"):
+                        if self.base == 3:
+                            buttonList = ["[1]","[2]","[3]","[4]","[5]","[6]","[7]","[8]","[9]","backspace"]
+                        elif self.base == 4:
+                            buttonList = ("[1]","[2]","[3]","[4]","[5]","[6]","[7]","[8]","[9]","[a]","[b]","[c]","[d]","[e]","[f]","[g]","backspace")    
+                        if pygame.key.name(event.key) in buttonList:
                             if pygame.key.name(event.key) == "backspace":
                                 case.indices = []
                                 self.grilleDeJeu[case.grillePos[0]][case.grillePos[1]] = ' '

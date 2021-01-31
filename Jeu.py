@@ -7,14 +7,17 @@ import Layout as Lyt
 from random import randint
 
 class Jeu:
-    def __init__(self,title,width,height):
+    def __init__(self,title,base,width,height):
         pygame.init() #initalisation de pygame
         self.title = title
         self.width = width
         self.height = height
         self.layoutEnCours = "titleScreen"
-        self.sudoku = Sudoku(3)
-        self.sudoku.afficher()
+
+        # self.sudoku = Sudoku(self.base)
+        #self.sudoku.load('grille.txt')
+        # self.sudoku.afficher()
+        #self.sudoku.save('grille.txt')  --> Faudrait demander un nom au user, puis le reafficher dans une liste ensuite
         self.heure = 0
         self.minute = 0
         self.seconde = 0
@@ -52,6 +55,10 @@ class Jeu:
                     self.sound_manager.playOneTime('click')
                     self.layoutEnCours = "ChoixGrille"
 
+                    self.layoutEnCours = "Jeu"
+                    self.sudoku = Sudoku(self.base)
+                    self.sudoku.afficher()
+                    self.sound_manager.playXTime('vent')
                 if action == 'Charger':
                     self.sound_manager.playOneTime('click')
                     ok = self.sudoku.loadMenu()
@@ -70,6 +77,8 @@ class Jeu:
                 if action == 'Seize':
                     self.layoutEnCours = "Jeu"
                     self.sound_manager.playXTime('vent')
+                        self.sudoku = Sudoku(self.base)
+                        self.sudoku.afficher()
             if self.layoutEnCours == "Jeu":
                 if not self.timer:
                     pygame.time.set_timer( pygame.USEREVENT + 1,1000)
