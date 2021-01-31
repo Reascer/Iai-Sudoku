@@ -24,6 +24,10 @@ class Sudoku:
         self.stringCompteur = "00:00:00"
 
     def init(self):
+        if self.base == 3:
+            self.buttonList = ("[1]","[2]","[3]","[4]","[5]","[6]","[7]","[8]","[9]","backspace")
+        elif self.base == 4:
+            self.buttonList = ("[1]","[2]","[3]","[4]","[5]","[6]","[7]","[8]","[9]","a","b","c","d","e","f","g","backspace")    
         self.backgroundGrille = elmt.element(0,0,"case.png")
         if self.base == 3:
             self.backgroundGrille.setTexture(pygame.transform.scale(self.backgroundGrille.texture,(440,440)))
@@ -46,7 +50,7 @@ class Sudoku:
                 x = x - 1
             if i % self.base == 0:
                 x = x + 2
-            case = cse.case((i//self.taille,i%self.taille),self.grilleDeJeu[i//self.taille][i%self.taille],x,y)
+            case = cse.case((i//self.taille,i%self.taille),self.grilleDeJeu[i//self.taille][i%self.taille],x,y,self.buttonList)
             self.font = pygame.font.SysFont("comicsansms", 20)
             # if self.base==3:
             case.setTexture(pygame.Surface((40,40),pygame.SRCALPHA))
@@ -272,11 +276,7 @@ class Sudoku:
                         case2.rightClickState = False
                     pygame.draw.rect(case.texture,(255,120,120,255),(1,1,38,38),width=1)
                     if event.type == pygame.KEYDOWN:
-                        if self.base == 3:
-                            buttonList = ["[1]","[2]","[3]","[4]","[5]","[6]","[7]","[8]","[9]","backspace"]
-                        elif self.base == 4:
-                            buttonList = ("[1]","[2]","[3]","[4]","[5]","[6]","[7]","[8]","[9]","a","b","c","d","e","f","g","backspace")    
-                        if pygame.key.name(event.key) in buttonList:
+                        if pygame.key.name(event.key) in self.buttonList:
                             if pygame.key.name(event.key) == "backspace":
                                 case.indices = []
                                 self.grilleDeJeu[case.grillePos[0]][case.grillePos[1]] = ' '

@@ -29,7 +29,6 @@ class Jeu:
 
         pygame.display.set_caption(title) # Mettre le titre sur Iai-sudoku <3
         self.screen = pygame.display.set_mode((width,height)) # Resize la fenêtre
-
         self.font = pygame.font.SysFont("comicsansms", 30) # initialisaiton des font (c'est pour le texte)
 
         self.initRender()
@@ -67,9 +66,13 @@ class Jeu:
                         if self.sudoku.base == 4:
                             x = 10
                             y = 200
+                            i = 0
                             for button in self.jeuLayout.listElmtManager[0].elements:
+                                i = i + 1
                                 button.setPosition(x,y)
-                                y= y + 150
+                                y = y + 150
+                                if i == 3:
+                                    break
                             self.jeuLayout.listElmtManager[1].elements[0].setPosition(50,40)
                         self.layoutEnCours = "Jeu"
             if self.layoutEnCours == 'ChoixGrille':
@@ -90,9 +93,13 @@ class Jeu:
                     self.sound_manager.playXTime('vent')
                     x = 10
                     y = 200
+                    i = 0
                     for button in self.jeuLayout.listElmtManager[0].elements:
+                        i = i + 1
                         button.setPosition(x,y)
                         y= y + 150
+                        if i == 3:
+                            break
                     self.jeuLayout.listElmtManager[1].elements[0].setPosition(50,40)
 
 

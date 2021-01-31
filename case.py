@@ -1,13 +1,14 @@
 from element import *
 
 class case(element): 
-    def __init__(self,grillePos,valeur,pos_x,pos_y,textureName=None):
+    def __init__(self,grillePos,valeur,pos_x,pos_y,buttonlist,textureName=None):
         super().__init__(pos_x,pos_y,textureName)
         self.indices = []
         self.grillePos = grillePos
         self.grilleValeur = valeur
         self.rightClickState = False
         self.font = pygame.font.SysFont("comicsansms", 10)
+        self.buttonlist = buttonlist
     
     def ajouterIndice(self,valeur):
         if len(self.indices) < 8:
@@ -44,10 +45,14 @@ class case(element):
                             pygame.draw.rect(self.texture,(255,255,120,255),(1,1,38,38),width=1)
         if self.rightClickState:
             if event.type == pygame.KEYDOWN:
-                if pygame.key.name(event.key) in ("[1]","[2]","[3]","[4]","[5]","[6]","[7]","[8]","[9]","backspace"):
+                if pygame.key.name(event.key) in self.buttonlist:
                     if pygame.key.name(event.key) == "backspace":
                         if len(self.indices) > 0:
                             self.indices.pop()
                     else:
-                        if pygame.key.name(event.key)[1] not in self.indices:
-                            self.ajouterIndice(pygame.key.name(event.key)[1])
+                        if len(pygame.key.name(event.key)) > 1:
+                            if pygame.key.name(event.key)[1] not in self.indices:
+                                self.ajouterIndice(pygame.key.name(event.key)[1])
+                        else:
+                            if pygame.key.name(event.key).upper() not in self.indices:
+                                self.ajouterIndice(pygame.key.name(event.key).upper())
