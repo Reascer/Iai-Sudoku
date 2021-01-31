@@ -7,29 +7,33 @@ import Layout as Lyt
 from random import randint
 
 class Jeu:
-    def __init__(self,title,width,height):
+    def __init__(self,title,base,width,height):
         pygame.init() #initalisation de pygame
         self.title = title
         self.width = width
         self.height = height
         self.layoutEnCours = "titleScreen"
+        self.base = base
         self.sudoku = Sudoku(3)
-        self.sudoku.afficher()
+        # self.sudoku = Sudoku(self.base)
+        #self.sudoku.load('grille.txt')
+        # self.sudoku.afficher()
+        #self.sudoku.save('grille.txt')  --> Faudrait demander un nom au user, puis le reafficher dans une liste ensuite
         self.heure = 0
         self.minute = 0
         self.seconde = 0
         self.running = True
         self.timer = False
         self.Pause = False
-        
+
         self.sakuraDelay = 0
         self.sound_manager = SoundManager()
 
         pygame.display.set_caption(title) # Mettre le titre sur Iai-sudoku <3
-        self.screen = pygame.display.set_mode((1080,720)) # Resize la fenêtre
+        self.screen = pygame.display.set_mode((width,height)) # Resize la fenêtre
 
         self.font = pygame.font.SysFont("comicsansms", 30) # initialisaiton des font (c'est pour le texte)
-        
+
         self.initRender()
 
 
@@ -44,13 +48,15 @@ class Jeu:
                     self.quit()
                     return True
                 if action == 'SubMenu':
+                    self.sound_manager.playOneTime('click')
                     self.layoutEnCours = "SubMenu"
             if self.layoutEnCours == "SubMenu":
                 action = self.subMenu.event(event)
                 if action == 'Jouer':
-                    self.layoutEnCours = "Jeu"
-                    self.sound_manager.playXTime('vent')
+                    self.sound_manager.playOneTime('click')
+                    self.layoutEnCours = "ChoixGrille"
                 if action == 'Charger':
+                    self.sound_manager.playOneTime('click')
                     ok = self.sudoku.loadMenu()
                     if ok == True:
                         self.sound_manager.playXTime('vent')
@@ -59,19 +65,33 @@ class Jeu:
                         self.seconde = int(self.sudoku.stringCompteur[6:8])
                         self.jeuLayout.listElmtManager[1].elements[0].setText(self.font.render(self.sudoku.stringCompteur, True,(0,0,0)))
                         self.layoutEnCours = "Jeu"
+            if self.layoutEnCours == 'ChoixGrille':
+                action = self.choixGrille.event(event)
+                if action == 'Neuf':
+                    self.launchSudoku(3)
+                    self.layoutEnCours = "Jeu"
+                    self.sound_manager.playXTime('vent')
+                if action == 'Seize':
+                    self.launchSudoku(4)
+                    self.layoutEnCours = "Jeu"
+                    self.sound_manager.playXTime('vent')
+
             if self.layoutEnCours == "Jeu":
                 if not self.timer:
                     pygame.time.set_timer( pygame.USEREVENT + 1,1000)
                     self.timer = True
                 action = self.jeuLayout.event(event)
                 if action == 'Sauvegarder':
+                    self.sound_manager.playOneTime('click')
                     self.sudoku.save()
                 if action == 'Verif':
                     if self.sudoku.isFinish():
-                        pass #Ajouter une fin de partie
+                        self.sound_manager.playOneTime('click')
+                        print("tu win bro")
                     else:
                         self.sound_manager.playOneTime('loose')
                 if action == 'Pause':
+                    self.sound_manager.playOneTime('click')
                     if self.Pause == False:
                         self.Pause = True
                     else:
@@ -103,9 +123,12 @@ class Jeu:
                         self.sudoku.stringCompteur = stringCompteur
                         self.jeuLayout.listElmtManager[1].elements[0].setText(self.font.render(stringCompteur, True,(0,0,0)))
 
+    def launchSudoku(self, base):
+        self.sudoku = Sudoku(base)
+        self.sudoku.afficher()
 
     def update(self):
-        
+
         for petal in self.sakuraPetalManager.elements:
             if self.sakuraDelay < petal.action[2]:
                 pass
@@ -117,7 +140,7 @@ class Jeu:
                     petal.texture_rect.x = randint(-500,1000)
         if self.sakuraDelay <= 600:
             self.sakuraDelay = self.sakuraDelay + 1
-            
+
 
     def render(self):
         if self.layoutEnCours == 'Jeu':
@@ -125,7 +148,6 @@ class Jeu:
             self.sakuraPetalManager.renderElements(self.screen)
             self.jeuLayout.render(self.screen)
             self.sudoku.render(self.screen)
-
 
         if self.layoutEnCours == "titleScreen":
             self.backgroundManager.renderElements(self.screen,0)
@@ -136,6 +158,11 @@ class Jeu:
             self.backgroundManager.renderElements(self.screen,0)
             self.sakuraPetalManager.renderElements(self.screen)
             self.subMenu.render(self.screen)
+
+        if self.layoutEnCours == "ChoixGrille":
+            self.backgroundManager.renderElements(self.screen,0)
+            self.sakuraPetalManager.renderElements(self.screen)
+            self.choixGrille.render(self.screen)
 
 
         pygame.display.flip()
@@ -153,38 +180,40 @@ class Jeu:
         textManager = elmtManager.elementManager()
         buttonManager = elmtManager.elementManager()
         buttonManagerSub = elmtManager.elementManager()
+        buttonManagerGrille = elmtManager.elementManager()
         buttonManagerJeu = elmtManager.elementManager()
+
 
         #====================== element a ajouter ===========================
 
         titleBackground = elmt.element(0,0,"sakuraBackground.jpg")
-        titleBackground.texture = pygame.transform.scale(titleBackground.texture,(1080,720))
+        titleBackground.texture = pygame.transform.scale(titleBackground.texture,(self.width,self.height))
         self.backgroundManager.addElement(titleBackground)
 
         jeuBackground = elmt.element(0,0,"sakuraBackground2.jpg")
-        jeuBackground.texture = pygame.transform.scale(jeuBackground.texture,(1080,720))
+        jeuBackground.texture = pygame.transform.scale(jeuBackground.texture,(self.width,self.height))
         self.backgroundManager.addElement(jeuBackground)
-        
+
         for i in range(50):
             petal = elmt.element(randint(-500,1000),-50,"sakuraPetal.png")
             petal.texture = pygame.transform.scale(petal.texture,(40,40))
             petal.action = (randint(0,4),randint(0,2),randint(0,600))
             self.sakuraPetalManager.addElement(petal)
 
-        Menutitle = elmt.element(300,200,"title.png")
+        Menutitle = elmt.element(355,230,"title.png")
         petal.texture = pygame.transform.scale(petal.texture,(40,40))
         textManager.elements.append(Menutitle)
 
         #====================== Bouttons Home Screen ===========================
-        
-        buttonPlay = elmt.element(5,300,"button.png")
+
+        buttonPlay = elmt.element(5,330,"button.png")
         buttonPlay.setText(pygame.font.SysFont("comicsansms", 48).render('Play', True,(0,0,0)))
         buttonPlay.clickable = True
         buttonPlay.action = "SubMenu"
         buttonPlay.hoverable = True
         buttonManager.addElement(buttonPlay)
 
-        buttonQuitter = elmt.element(450,300,"button.png")
+        buttonQuitter = elmt.element(560,330,"button.png")
         buttonQuitter.setText(self.font.render('Quitter', True,(0,0,0)))
         buttonQuitter.clickable = True
         buttonQuitter.action = "Quitter"
@@ -192,43 +221,59 @@ class Jeu:
         buttonManager.addElement(buttonQuitter)
 
         #====================== Bouttons Sous Menu ===========================
-        
-        buttonNew = elmt.element(50,100,"button.png")
+
+        buttonNew = elmt.element(5,330,"button.png")
         buttonNew.setText(self.font.render('Nouveau', True,(0,0,0)))
         buttonNew.clickable = True
         buttonNew.action = "Jouer"
         buttonNew.hoverable = True
         buttonManagerSub.addElement(buttonNew)
 
-        buttonLoad = elmt.element(450,100,"button.png")
+        buttonLoad = elmt.element(560,330,"button.png")
         buttonLoad.setText(self.font.render('Charger', True,(0,0,0)))
         buttonLoad.clickable = True
         buttonLoad.action = "Charger"
         buttonLoad.hoverable = True
         buttonManagerSub.addElement(buttonLoad)
 
+        # ====================== Bouttons Choix Grille ===========================
+
+        buttonNeuf = elmt.element(5, 330, "button.png")
+        buttonNeuf.setText(self.font.render('9x9', True, (0, 0, 0)))
+        buttonNeuf.clickable = True
+        buttonNeuf.action = "Neuf"
+        buttonNeuf.hoverable = True
+        buttonManagerGrille.addElement(buttonNeuf)
+
+        buttonSeize = elmt.element(560, 330, "button.png")
+        buttonSeize.setText(self.font.render('16x16', True, (0, 0, 0)))
+        buttonSeize.clickable = True
+        buttonSeize.action = "Seize"
+        buttonSeize.hoverable = True
+        buttonManagerGrille.addElement(buttonSeize)
+
         #====================== Bouttons Jeu ===========================
         otherElmManagerJeu = elmtManager.elementManager()
 
-        compteur = elmt.element(380,25,"compteur.png")
+        compteur = elmt.element(450,5,"compteur.png")
         compteur.setText(self.font.render("00:00:00", True,(0,0,0)))
         otherElmManagerJeu.addElement(compteur)
 
-        buttonVerif = elmt.element(440,600,"buttonRect.png")
+        buttonVerif = elmt.element(505,720,"buttonRect.png")
         buttonVerif.setTexture(pygame.transform.scale(buttonVerif.texture,(200,80)))
         buttonVerif.setText(pygame.transform.scale(self.font.render('Verifier', True,(0,0,0)),(150,70)))
         buttonVerif.clickable = True
         buttonVerif.action = "Verif"
         buttonManagerJeu.addElement(buttonVerif)
 
-        buttonSauvegarder = elmt.element(200,600,"buttonRect.png")
+        buttonSauvegarder = elmt.element(250,720,"buttonRect.png")
         buttonSauvegarder.setTexture(pygame.transform.scale(buttonSauvegarder.texture,(200,80)))
         buttonSauvegarder.setText(pygame.transform.scale(self.font.render('Sauvegarder', True,(0,0,0)),(150,50)))
         buttonSauvegarder.clickable = True
         buttonSauvegarder.action = "Sauvegarder"
         buttonManagerJeu.addElement(buttonSauvegarder)
 
-        buttonPause = elmt.element(680,600,"buttonRect.png")
+        buttonPause = elmt.element(760,720,"buttonRect.png")
         buttonPause.setTexture(pygame.transform.scale(buttonPause.texture,(200,80)))
         buttonPause.setText(pygame.transform.scale(self.font.render('Pause', True,(0,0,0)),(150,70)))
         buttonPause.clickable = True
@@ -243,6 +288,11 @@ class Jeu:
 
         self.subMenu = Lyt.Layout()
         self.subMenu.addElmtManager(buttonManagerSub)
+        self.subMenu.addElmtManager(textManager)
+
+        self.choixGrille = Lyt.Layout()
+        self.choixGrille.addElmtManager(buttonManagerGrille)
+        self.choixGrille.addElmtManager(textManager)
 
         self.jeuLayout = Lyt.Layout()
         self.jeuLayout.addElmtManager(buttonManagerJeu)
