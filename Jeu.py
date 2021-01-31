@@ -75,6 +75,9 @@ class Jeu:
                                     break
                             self.jeuLayout.listElmtManager[1].elements[0].setPosition(50,40)
                         self.layoutEnCours = "Jeu"
+                if action == 'Back':
+                    self.sound_manager.playOneTime('click')
+                    self.layoutEnCours = 'titleScreen'
             if self.layoutEnCours == 'ChoixGrille':
                 action = self.choixGrille.event(event)
                 if action == 'Neuf':
@@ -101,6 +104,9 @@ class Jeu:
                         if i == 3:
                             break
                     self.jeuLayout.listElmtManager[1].elements[0].setPosition(50,40)
+                if action == 'Back':
+                    self.sound_manager.playOneTime('click')
+                    self.layoutEnCours = 'titleScreen'
             if self.layoutEnCours == "Jeu":
                 if not self.timer:
                     pygame.time.set_timer( pygame.USEREVENT + 1,1000)
@@ -137,6 +143,9 @@ class Jeu:
                         self.Pause = True
                     else:
                         self.Pause = False
+                if action == 'Back':
+                    self.sound_manager.playOneTime('click')
+                    self.layoutEnCours = 'titleScreen'
                 if action == 'Ready':
                     self.Pause = False
                     self.sound_manager.playOneTime('hajime')
@@ -348,6 +357,19 @@ class Jeu:
         screenReady.clickable = True
         screenReady.action = "Ready"
         buttonManagerJeu.addElement(screenReady)
+
+        #====================== Bouttons Back to Home ===========================
+
+        buttonBack = elmt.element(820,-10,"buttonRect.png")
+        buttonBack.setTexture(pygame.transform.scale(buttonBack.texture,(400,180)))
+        buttonBack.setText(pygame.font.SysFont("comicsansms", 48).render('Menu', True,(0,0,0)))
+        buttonBack.clickable = True
+        buttonBack.action = "Back"
+        buttonBack.hoverable = True
+        buttonManagerSub.addElement(buttonBack)
+        buttonManagerGrille.addElement(buttonBack)
+        buttonManagerJeu.addElement(buttonBack)
+
         #====================== Initialisation des Layouts ===========================
 
         self.titleScreen = Lyt.Layout()
