@@ -1,6 +1,7 @@
 import pygame
 import element as elmt
 import elementManager as elmtManager
+from Sons import SoundManager
 from Sudoku import Sudoku
 import Layout as Lyt
 
@@ -19,6 +20,7 @@ class Jeu:
         self.running = True
         self.timer = False
         self.Pause = False
+        self.sound_manager = SoundManager()
 
         pygame.display.set_caption(title) # Mettre le titre sur Iai-sudoku <3
         self.screen = pygame.display.set_mode((1080,720)) # Resize la fenêtre
@@ -44,12 +46,14 @@ class Jeu:
                 action = self.subMenu.event(event)                
                 if action == 'Jouer':
                     self.layoutEnCours = "Jeu"
+                    self.sound_manager.playXTime('vent')
                 if action == 'Charger':
                     ok = self.sudoku.loadMenu()
-                    self.heure = int(self.sudoku.stringCompteur[0:2])
-                    self.minute = int(self.sudoku.stringCompteur[3:5])
-                    self.seconde = int(self.sudoku.stringCompteur[6:8])
                     if ok == True:
+                        self.sound_manager.playXTime('vent')
+                        self.heure = int(self.sudoku.stringCompteur[0:2])
+                        self.minute = int(self.sudoku.stringCompteur[3:5])
+                        self.seconde = int(self.sudoku.stringCompteur[6:8])
                         self.layoutEnCours = "Jeu"
             if self.layoutEnCours == "Jeu":
                 if not self.timer:
@@ -59,7 +63,10 @@ class Jeu:
                 if action == 'Sauvegarder':
                     self.sudoku.save()
                 if action == 'Verif':
-                    self.sudoku.isFinish()
+                    if self.sudoku.isFinish():
+                        pass #Ajouter une fin de partie
+                    else:
+                        self.sound_manager.playOneTime('loose')
                 if action == 'Pause':
                     if self.Pause == False:
                         self.Pause = True
