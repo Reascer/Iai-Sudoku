@@ -1,6 +1,6 @@
 from Jeu import *
 
-jeu = Jeu("Iai-sudoku",1080,720)
+jeu = Jeu("Iai-sudoku",3,1080,720)
 
 while jeu.running:
     jeu.event()

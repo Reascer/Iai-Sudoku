@@ -5,15 +5,17 @@ from Sudoku import Sudoku
 import Layout as Lyt
 
 class Jeu:
-    def __init__(self,title,width,height):
+    def __init__(self,title,base,width,height):
         pygame.init() #initalisation de pygame
         self.title = title
+        self.base = base
         self.width = width
         self.height = height
         self.layoutEnCours = "titleScreen"
-        self.sudoku = Sudoku(3)
+        
+        # self.sudoku = Sudoku(self.base)
         #self.sudoku.load('grille.txt')
-        self.sudoku.afficher()
+        # self.sudoku.afficher()
         #self.sudoku.save('grille.txt')  --> Faudrait demander un nom au user, puis le reafficher dans une liste ensuite
         self.heure = 0
         self.minute = 0
@@ -25,7 +27,7 @@ class Jeu:
         pygame.display.set_caption(title) # Mettre le titre sur Iai-sudoku <3
         self.screen = pygame.display.set_mode((1080,720)) # Resize la fenêtre
 
-        self.font = pygame.font.SysFont("comicsansms", 48) # initialisaiton des font (c'est pour le texte)
+        self.font = pygame.font.SysFont("comicsansms", 48) # initialisation des fonts (c'est pour le texte)
         
         self.initRender()
 
@@ -46,10 +48,14 @@ class Jeu:
                 action = self.subMenu.event(event)                
                 if action == 'Jouer':
                     self.layoutEnCours = "Jeu"
+                    self.sudoku = Sudoku(self.base)
+                    self.sudoku.afficher()
                 if action == 'Charger':
                     ok = self.sudoku.loadMenu()
                     if ok == True:
                         self.layoutEnCours = "Jeu"
+                        self.sudoku = Sudoku(self.base)
+                        self.sudoku.afficher()
             if self.layoutEnCours == "Jeu":
                 if not self.timer:
                     pygame.time.set_timer( pygame.USEREVENT + 1,1000)
