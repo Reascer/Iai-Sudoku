@@ -1,5 +1,7 @@
 import pygame
 
+#====================== Class Element - Conteneur d'élément type de l'application ===========================#
+
 class element:
     def __init__(self,pos_x,pos_y,textureName=None):
         self.alphaClickable = True
@@ -20,6 +22,8 @@ class element:
             self.texture_rect.x = pos_x
             self.texture_rect.y = pos_y
     
+#====================== Liste des event possibles sur les éléments constituant une Layout ===========================#
+
     def event(self,event):
         if self.clickable:
             if event.type == pygame.MOUSEBUTTONDOWN:
@@ -63,6 +67,8 @@ class element:
                 if self.clickState:
                     self.text.fill((255,255,0),rect=None, special_flags=pygame.BLEND_RGB_ADD)
                 
+#====================== Affichage d'un element ===========================#
+
     def render(self,screen):
         if self.texture is not None:
             screen.blit(self.texture, (self.texture_rect.x, self.texture_rect.y))
@@ -72,18 +78,25 @@ class element:
             else:
                 screen.blit(self.text, (self.texture_rect.x, self.texture_rect.y))
             
+#====================== Positionement d'un élément dans son Layout ===========================#
 
     def setPosition(self,pos_x,pos_y):
         self.texture_rect.x = pos_x
         self.texture_rect.y = pos_y
     
+#====================== Définition de la texture d'un élément ===========================#
+
     def setTexture(self,texture):
         self.texture = texture
         self.texture_rect.w = self.texture.get_rect().w
         self.texture_rect.h = self.texture.get_rect().h
     
+#====================== Définition du texte contenu dans un élément ===========================#
+
     def setText(self,text):
         self.text = text
+
+#====================== Centrage du texte dans son élément ===========================#
 
     def renderTextCenter(self,screen):
         screen.blit(self.text, (self.texture_rect.x + self.texture_rect.w/2 - self.text.get_width()/2, self.texture_rect.y + self.texture_rect.h/2 - self.text.get_height()/2))

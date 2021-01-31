@@ -218,6 +218,8 @@ class Jeu:
                         self.sudoku.stringCompteur = stringCompteur
                         self.jeuLayout.listElmtManager[0].elements[0].setText(self.font.render(stringCompteur, True,(0,0,0)))
 
+#====================== Lancement du Layout "Ready", lançant la grille de Sudoku ===========================#
+
     def launchSudoku(self, base):
         screenReady = elmt.element(0,0,"Ready.png")
         screenReady.clickable = True
@@ -232,7 +234,7 @@ class Jeu:
         self.jeuLayout.listElmtManager[0].elements[1].setText(self.font.render(vie, True,(0,190,0)))        
         self.sudoku.afficher()
 
-
+#====================== Lancement du Layout "Ready", lançant la grille de Sudoku ===========================#
 
     def update(self):
         for petal in self.sakuraPetalManager.elements:
@@ -289,7 +291,6 @@ class Jeu:
         buttonManagerGrille = elmtManager.elementManager()
         buttonManagerJeu = elmtManager.elementManager()
 
-
         #====================== element a ajouter ===========================#
 
         titleBackground = elmt.element(0,0,"sakuraBackground.jpg")
@@ -312,7 +313,6 @@ class Jeu:
 
         self.loading = elmt.element(0,0,"loading.png")
         self.Seppuku = elmt.element(0,0,"Seppuku.png")
-
 
         #====================== Bouttons Home Screen ===========================#
 
@@ -363,6 +363,7 @@ class Jeu:
         buttonManagerGrille.addElement(buttonSeize)
 
         #====================== Bouttons Jeu ===========================#
+
         otherElmManagerJeu = elmtManager.elementManager()
 
         compteur = elmt.element(450,5,"compteur.png")
@@ -406,7 +407,6 @@ class Jeu:
         buttonhtp.hoverable = False
         buttonhtp.alphaClickable = False
         buttonhtp.action = "howToPlay"
-
 
         #====================== Bouttons Back to Home ===========================#
 
