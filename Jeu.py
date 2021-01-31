@@ -44,13 +44,16 @@ class Jeu:
                     self.quit()
                     return True
                 if action == 'SubMenu':
+                    self.sound_manager.playOneTime('click')
                     self.layoutEnCours = "SubMenu"
             if self.layoutEnCours == "SubMenu":
                 action = self.subMenu.event(event)
                 if action == 'Jouer':
+                    self.sound_manager.playOneTime('click')
                     self.layoutEnCours = "Jeu"
                     self.sound_manager.playXTime('vent')
                 if action == 'Charger':
+                    self.sound_manager.playOneTime('click')
                     ok = self.sudoku.loadMenu()
                     if ok == True:
                         self.sound_manager.playXTime('vent')
@@ -65,13 +68,16 @@ class Jeu:
                     self.timer = True
                 action = self.jeuLayout.event(event)
                 if action == 'Sauvegarder':
+                    self.sound_manager.playOneTime('click')
                     self.sudoku.save()
                 if action == 'Verif':
                     if self.sudoku.isFinish():
-                        pass #Ajouter une fin de partie
+                        self.sound_manager.playOneTime('click')
+                        print("tu win bro")
                     else:
                         self.sound_manager.playOneTime('loose')
                 if action == 'Pause':
+                    self.sound_manager.playOneTime('click')
                     if self.Pause == False:
                         self.Pause = True
                     else:
