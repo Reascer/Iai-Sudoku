@@ -226,7 +226,7 @@ class Jeu:
         for i in range(50):
             petal = elmt.element(randint(-500,1000),-50,"sakuraPetal.png")
             petal.texture = pygame.transform.scale(petal.texture,(40,40))
-            petal.action = (randint(0,4),randint(0,2),randint(0,600))
+            petal.action = (randint(1,5),randint(1,3),randint(0,600))
             self.sakuraPetalManager.addElement(petal)
 
         Menutitle = elmt.element(355,230,"title.png")
