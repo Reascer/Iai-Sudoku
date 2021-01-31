@@ -46,10 +46,10 @@ class Jeu:
                     self.layoutEnCours = "Jeu"
                 if action == 'Charger':
                     ok = self.sudoku.loadMenu()
-                    self.heure = int(self.sudoku.stringCompteur[0:2])
-                    self.minute = int(self.sudoku.stringCompteur[3:5])
-                    self.seconde = int(self.sudoku.stringCompteur[6:8])
                     if ok == True:
+                        self.heure = int(self.sudoku.stringCompteur[0:2])
+                        self.minute = int(self.sudoku.stringCompteur[3:5])
+                        self.seconde = int(self.sudoku.stringCompteur[6:8])
                         self.layoutEnCours = "Jeu"
             if self.layoutEnCours == "Jeu":
                 if not self.timer:
