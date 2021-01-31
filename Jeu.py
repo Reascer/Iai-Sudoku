@@ -259,7 +259,7 @@ class Jeu:
             if i != self.sudoku.trys-1:
                 vie = vie + ' '
         self.jeuLayout.listElmtManager[0].elements[1].setText(self.font.render(vie, True,(0,190,0)))        
-        self.sudoku.afficher()
+        # self.sudoku.afficher() # Fonction d'affichage console de la grille pour dev
 
 #====================== Lancement du Layout "Ready", lançant la grille de Sudoku ===========================#
 
