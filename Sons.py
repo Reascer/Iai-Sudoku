@@ -9,7 +9,7 @@ class SoundManager:
         }
 
     def playXTime(self, name):
-        self.sounds[name].play(1000)
+        self.sounds[name].play(1000).set_volume(50)
 
     def playOneTime(self, name):
-        self.sounds[name].play()
+        self.sounds[name].play().set_volume(50)
