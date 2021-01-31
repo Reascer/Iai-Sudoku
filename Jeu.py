@@ -112,9 +112,23 @@ class Jeu:
                 if action == 'Verif':
                     if self.sudoku.isFinish():
                         self.sound_manager.playOneTime('banzai')
+                        self.Pause = True
+                        Banzai = elmt.element(0,0,"Banzai.png")
+                        Banzai.clickable = True
+                        Banzai.action = "titleScreen"
+                        self.jeuLayout.listElmtManager[1].addElement(Banzai)
                         print("tu win bro")
                     else:
+                        self.sudoku.trys = self.sudoku.trys - 1
+                        vie = ''
+                        for i in range(self.sudoku.trys):
+                            vie = vie + 'O'
+                            if i != self.sudoku.trys-1:
+                                vie = vie + ' '
+                        self.jeuLayout.listElmtManager[1].elements[1].setText(self.font.render(vie, True,(0,190,0)))   
                         self.sound_manager.playOneTime('loose')
+                        if self.sudoku.trys == 0:
+                            self.layoutEnCours = "titleScreen"
                 if action == 'Pause':
                     self.sound_manager.playOneTime('click')
                     if self.Pause == False:
@@ -127,6 +141,8 @@ class Jeu:
                     self.jeuLayout.listElmtManager[0].elements.pop()
                 if not self.Pause:
                     self.sudoku.event(event)
+                if action == "titleScreen":
+                    self.layoutEnCours = "titleScreen"
                 if event.type ==  pygame.USEREVENT + 1:
                     if not self.Pause:
                         self.seconde = self.seconde + 1
@@ -155,6 +171,12 @@ class Jeu:
 
     def launchSudoku(self, base):
         self.sudoku = Sudoku(base)
+        vie = ''
+        for i in range(self.sudoku.trys):
+            vie = vie + 'O'
+            if i != self.sudoku.trys-1:
+                vie = vie + ' '
+        self.jeuLayout.listElmtManager[1].elements[1].setText(self.font.render(vie, True,(0,190,0)))        
         self.sudoku.afficher()
 
     def update(self):
@@ -234,6 +256,7 @@ class Jeu:
         textManager.elements.append(Menutitle)
 
         self.loading = elmt.element(0,0,"loading.png")
+
         #====================== Bouttons Home Screen ===========================
 
         buttonPlay = elmt.element(5,330,"button.png")
@@ -289,6 +312,11 @@ class Jeu:
         compteur.setText(self.font.render("00:00:00", True,(0,0,0)))
         otherElmManagerJeu.addElement(compteur)
 
+        vie = elmt.element(470,95,"compteur.png")
+        vie.setTexture(pygame.transform.scale(vie.texture,(278,74)))
+        vie.setText(self.font.render(vie.action, True,(0,190,0)))
+        otherElmManagerJeu.addElement(vie)
+
         buttonVerif = elmt.element(420,620,"buttonRect.png")
         buttonVerif.setTexture(pygame.transform.scale(buttonVerif.texture,(400,180)))
         buttonVerif.setText(self.font.render('Verifier', True,(0,0,0)))
@@ -318,7 +346,6 @@ class Jeu:
         screenReady.clickable = True
         screenReady.action = "Ready"
         buttonManagerJeu.addElement(screenReady)
-
         #====================== Initialisation des Layouts ===========================
 
         self.titleScreen = Lyt.Layout()

@@ -22,6 +22,7 @@ class Sudoku:
         self.remplissage(self.base)
         self.vidage(3,5)
         self.stringCompteur = "00:00:00"
+        self.trys = 5
 
     def init(self):
         if self.base == 3:
