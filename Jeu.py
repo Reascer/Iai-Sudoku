@@ -1,6 +1,7 @@
 import pygame
 import element as elmt
 import elementManager as elmtManager
+from Sons import SoundManager
 from Sudoku import Sudoku
 import Layout as Lyt
 from random import randint
@@ -22,6 +23,7 @@ class Jeu:
         self.Pause = False
         
         self.sakuraDelay = 0
+        self.sound_manager = SoundManager()
 
         pygame.display.set_caption(title) # Mettre le titre sur Iai-sudoku <3
         self.screen = pygame.display.set_mode((1080,720)) # Resize la fenêtre
@@ -41,15 +43,17 @@ class Jeu:
                 if action == 'Quitter':
                     self.quit()
                     return True
-                if action == 'SubMenu':                    
+                if action == 'SubMenu':
                     self.layoutEnCours = "SubMenu"
             if self.layoutEnCours == "SubMenu":
-                action = self.subMenu.event(event)                
+                action = self.subMenu.event(event)
                 if action == 'Jouer':
                     self.layoutEnCours = "Jeu"
+                    self.sound_manager.playXTime('vent')
                 if action == 'Charger':
                     ok = self.sudoku.loadMenu()
                     if ok == True:
+                        self.sound_manager.playXTime('vent')
                         self.heure = int(self.sudoku.stringCompteur[0:2])
                         self.minute = int(self.sudoku.stringCompteur[3:5])
                         self.seconde = int(self.sudoku.stringCompteur[6:8])
@@ -63,7 +67,10 @@ class Jeu:
                 if action == 'Sauvegarder':
                     self.sudoku.save()
                 if action == 'Verif':
-                    self.sudoku.isFinish()
+                    if self.sudoku.isFinish():
+                        pass #Ajouter une fin de partie
+                    else:
+                        self.sound_manager.playOneTime('loose')
                 if action == 'Pause':
                     if self.Pause == False:
                         self.Pause = True
@@ -96,7 +103,7 @@ class Jeu:
                         self.sudoku.stringCompteur = stringCompteur
                         self.jeuLayout.listElmtManager[1].elements[0].setText(self.font.render(stringCompteur, True,(0,0,0)))
 
-            
+
     def update(self):
         
         for petal in self.sakuraPetalManager.elements:
@@ -132,14 +139,14 @@ class Jeu:
 
 
         pygame.display.flip()
-    
+
     def quit(self):
         self.running = False
         pygame.quit()
         print("end of game")
-    
+
     #Ajouter les elements dans l'initRender
-    
+
     def initRender(self):
         self.backgroundManager = elmtManager.elementManager()
         self.sakuraPetalManager = elmtManager.elementManager()
@@ -149,7 +156,7 @@ class Jeu:
         buttonManagerJeu = elmtManager.elementManager()
 
         #====================== element a ajouter ===========================
-        
+
         titleBackground = elmt.element(0,0,"sakuraBackground.jpg")
         titleBackground.texture = pygame.transform.scale(titleBackground.texture,(1080,720))
         self.backgroundManager.addElement(titleBackground)
@@ -167,7 +174,7 @@ class Jeu:
         Menutitle = elmt.element(300,200,"title.png")
         petal.texture = pygame.transform.scale(petal.texture,(40,40))
         textManager.elements.append(Menutitle)
-        
+
         #====================== Bouttons Home Screen ===========================
         
         buttonPlay = elmt.element(5,300,"button.png")
@@ -183,7 +190,7 @@ class Jeu:
         buttonQuitter.action = "Quitter"
         buttonQuitter.hoverable = True
         buttonManager.addElement(buttonQuitter)
-        
+
         #====================== Bouttons Sous Menu ===========================
         
         buttonNew = elmt.element(50,100,"button.png")
@@ -240,7 +247,3 @@ class Jeu:
         self.jeuLayout = Lyt.Layout()
         self.jeuLayout.addElmtManager(buttonManagerJeu)
         self.jeuLayout.addElmtManager(otherElmManagerJeu)
-
-
-        
-        
