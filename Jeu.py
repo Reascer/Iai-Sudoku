@@ -318,7 +318,7 @@ class Jeu:
         buttonManagerGrille = elmtManager.elementManager()
         buttonManagerJeu = elmtManager.elementManager()
 
-        #====================== element a ajouter ===========================#
+        #====================== Elements à ajouter ===========================#
 
         titleBackground = elmt.element(0,0,"sakuraBackground.jpg")
         titleBackground.texture = pygame.transform.scale(titleBackground.texture,(self.width,self.height))
