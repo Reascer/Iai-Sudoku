@@ -24,6 +24,7 @@ class Jeu:
         self.sudoku = Sudoku()
         self.sakuraDelay = 0
         self.sound_manager = SoundManager()
+        pygame.display.set_icon(pygame.image.load('ressources/icon.png'))
 
         pygame.display.set_caption(title) # Mettre le titre sur Iai-sudoku <3
         self.screen = pygame.display.set_mode((width,height)) # Resize la fenêtre
