@@ -1,5 +1,7 @@
 from element import *
 
+#====================== Classe case du programme ===========================#
+
 class case(element): 
     def __init__(self,grillePos,valeur,pos_x,pos_y,buttonlist,textureName=None):
         super().__init__(pos_x,pos_y,textureName)
@@ -13,6 +15,8 @@ class case(element):
     def ajouterIndice(self,valeur):
         if len(self.indices) < 8:
             self.indices.append(valeur)
+
+#====================== Methode d'affichage des cases ===========================#
 
     def render(self,screen):
         super().render(screen)
@@ -29,6 +33,8 @@ class case(element):
                 x = x + 13
                 i = i + 1
             i = i + 1
+
+#====================== Event pris en charge par un objet case ===========================#
 
     def event(self,event):
         super().event(event)
