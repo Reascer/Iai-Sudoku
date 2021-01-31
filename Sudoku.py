@@ -7,9 +7,14 @@ from os import getcwd
 from datetime import datetime
 
 class Sudoku:
-    def __init__(self, base):
-        self.base = base
-        self.taille = base * base
+    def __init__(self, base=None):
+        if base is not None:
+            self.base = base
+            self.taille = base * base
+            self.generate()
+            self.init()
+            
+    def generate(self):
         self.grille = [[0 for colone in range(0,self.taille)] for ligne in range(0,self.taille)]
         self.grilleDeJeu = [[0 for colone in range(0,self.taille)] for ligne in range(0,self.taille)]
         self.number9 = ['1','2','3','4','5','6','7','8','9']
@@ -18,6 +23,7 @@ class Sudoku:
         self.vidage(3,5)
         self.stringCompteur = "00:00:00"
 
+    def init(self):
         self.backgroundGrille = elmt.element(0,0,"case.png")
         if self.base == 3:
             self.backgroundGrille.setTexture(pygame.transform.scale(self.backgroundGrille.texture,(440,440)))
@@ -90,12 +96,6 @@ class Sudoku:
                 shuffle(number)      
                 for value in number:
                     if not(value in self.grille[row]):
-                        
-                        # if base == 3:
-                        #     caseList = self.grille[0][col],self.grille[1][col],self.grille[2][col],self.grille[3][col],self.grille[4][col],self.grille[5][col],self.grille[6][col],self.grille[7][col],self.grille[8][col]                
-                        # elif base == 4:
-                        #     caseList = self.grille[0][col],self.grille[1][col],self.grille[2][col],self.grille[3][col],self.grille[4][col],self.grille[5][col],self.grille[6][col],self.grille[7][col],self.grille[8][col],self.grille[9][col],self.grille[10][col],self.grille[11][col],self.grille[12][col],self.grille[13][col],self.grille[14][col],self.grille[15][col]
-                        # if not value in (caseList):
                         if not value in [self.grille[i][col] for i in range (0, self.taille-1)]:
                             square=[]
                             if row<base:
@@ -312,6 +312,13 @@ class Sudoku:
             with open(path, mode="r") as fichier:
                 # Les etapes en lecture sur le fichier
                 content = fichier.readline()
+                if len(content) == 82:
+                    self.base = 3
+                if len(content) == 257:
+                    self.base = 4
+                self.taille = self.base * self.base
+                self.grille = [[0 for colone in range(0,self.taille)] for ligne in range(0,self.taille)]
+                self.grilleDeJeu = [[0 for colone in range(0,self.taille)] for ligne in range(0,self.taille)]
                 if content == "":
                     print("Il n'y a rien a charger.")
                 else:
@@ -321,7 +328,7 @@ class Sudoku:
                     for i in range(self.taille*self.taille):
                         self.grille[i//self.taille][i%self.taille] = content[i]
                     self.stringCompteur = fichier.readline()
-                self.initRender()
+                self.init()
                 fichier.close()
                 return True
         except FileNotFoundError:

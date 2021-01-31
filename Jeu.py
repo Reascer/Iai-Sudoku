@@ -7,14 +7,12 @@ import Layout as Lyt
 from random import randint
 
 class Jeu:
-    def __init__(self,title,base,width,height):
+    def __init__(self,title,width,height):
         pygame.init() #initalisation de pygame
         self.title = title
         self.width = width
         self.height = height
         self.layoutEnCours = "titleScreen"
-        self.base = base
-        self.sudoku = Sudoku(3)
         # self.sudoku = Sudoku(self.base)
         #self.sudoku.load('grille.txt')
         # self.sudoku.afficher()
@@ -25,7 +23,7 @@ class Jeu:
         self.running = True
         self.timer = False
         self.Pause = False
-
+        self.sudoku = Sudoku()
         self.sakuraDelay = 0
         self.sound_manager = SoundManager()
 
@@ -57,6 +55,8 @@ class Jeu:
                     self.layoutEnCours = "ChoixGrille"
                 if action == 'Charger':
                     self.sound_manager.playOneTime('click')
+                    self.loading.render(self.screen)
+                    pygame.display.flip()
                     ok = self.sudoku.loadMenu()
                     if ok == True:
                         self.sound_manager.playXTime('vent')
@@ -64,14 +64,27 @@ class Jeu:
                         self.minute = int(self.sudoku.stringCompteur[3:5])
                         self.seconde = int(self.sudoku.stringCompteur[6:8])
                         self.jeuLayout.listElmtManager[1].elements[0].setText(self.font.render(self.sudoku.stringCompteur, True,(0,0,0)))
+                        if self.sudoku.base == 4:
+                            x = 10
+                            y = 200
+                            for button in self.jeuLayout.listElmtManager[0].elements:
+                                button.setPosition(x,y)
+                                y= y + 150
+                            self.jeuLayout.listElmtManager[1].elements[0].setPosition(50,40)
                         self.layoutEnCours = "Jeu"
             if self.layoutEnCours == 'ChoixGrille':
                 action = self.choixGrille.event(event)
                 if action == 'Neuf':
+                    self.sound_manager.playOneTime('click')
+                    self.loading.render(self.screen)
+                    pygame.display.flip()
                     self.launchSudoku(3)
                     self.layoutEnCours = "Jeu"
                     self.sound_manager.playXTime('vent')
                 if action == 'Seize':
+                    self.sound_manager.playOneTime('click')
+                    self.loading.render(self.screen)
+                    pygame.display.flip()
                     self.launchSudoku(4)
                     self.layoutEnCours = "Jeu"
                     self.sound_manager.playXTime('vent')
@@ -212,6 +225,7 @@ class Jeu:
         petal.texture = pygame.transform.scale(petal.texture,(40,40))
         textManager.elements.append(Menutitle)
 
+        self.loading = elmt.element(0,0,"loading.png")
         #====================== Bouttons Home Screen ===========================
 
         buttonPlay = elmt.element(5,330,"button.png")
