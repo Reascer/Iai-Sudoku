@@ -100,3 +100,4 @@ class element:
 
     def renderTextCenter(self,screen):
         screen.blit(self.text, (self.texture_rect.x + self.texture_rect.w/2 - self.text.get_width()/2, self.texture_rect.y + self.texture_rect.h/2 - self.text.get_height()/2))
+        

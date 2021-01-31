@@ -25,8 +25,3 @@ class elementManager:
             action = element.event(event)
             if not action == None:
                 return action
-
-    
-
-
-
