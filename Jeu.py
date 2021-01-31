@@ -115,6 +115,7 @@ class Jeu:
                         print("tu win bro")
                     else:
                         self.sound_manager.playOneTime('loose')
+                        self.sound_manager.playOneTime('seppuku')
                 if action == 'Pause':
                     self.sound_manager.playOneTime('click')
                     if self.Pause == False:
