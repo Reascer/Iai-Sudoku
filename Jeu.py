@@ -1,3 +1,4 @@
+
 import pygame
 import element as elmt
 import elementManager as elmtManager
@@ -5,8 +6,20 @@ from Sons import SoundManager
 from Sudoku import Sudoku
 import Layout as Lyt
 from random import randint
-
 #====================== Classe principale du programme ===========================#
+
+import sys
+import os
+
+def resource_path(relative_path):
+    try:
+    # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
 
 class Jeu:
     def __init__(self,title,width,height):
@@ -24,7 +37,7 @@ class Jeu:
         self.sudoku = Sudoku()
         self.sakuraDelay = 0
         self.sound_manager = SoundManager()
-        pygame.display.set_icon(pygame.image.load('ressources/icon.png'))
+        pygame.display.set_icon(pygame.image.load(resource_path('ressources/icon.png')))
 
         pygame.display.set_caption(title) # Mettre le titre sur Iai-sudoku <3
         self.screen = pygame.display.set_mode((width,height)) # Resize la fenêtre
@@ -82,8 +95,8 @@ class Jeu:
                             for button in self.jeuLayout.listElmtManager[1].elements:
                                 i = i + 1
                                 button.setPosition(x,y)
-                                y = y + 150
-                                if i == 3:
+                                y = y + 130
+                                if i == 4:
                                     break
                             self.jeuLayout.listElmtManager[0].elements[1].setPosition(70,130)
                             self.jeuLayout.listElmtManager[0].elements[0].setPosition(50,40)
@@ -176,7 +189,6 @@ class Jeu:
                         Banzai.clickable = True
                         Banzai.action = "titleScreen"
                         self.jeuLayout.listElmtManager[0].addElement(Banzai)
-                        print("tu win bro")
                     else:
                         self.sudoku.trys = self.sudoku.trys - 1
                         self.sudoku.changeCaseState()
@@ -213,6 +225,7 @@ class Jeu:
                     self.sudoku.event(event)
                 
                 if action == "titleScreen":
+                    self.jeuLayout.listElmtManager[0].elements.pop()
                     self.layoutEnCours = "titleScreen"
                 
                 if event.type ==  pygame.USEREVENT + 1:

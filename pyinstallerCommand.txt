@@ -1,0 +1,3 @@
+pyinstaller --onefile --noconsole --icon=ressources\icon.ico --name='Iai Sudoku' main.py
+### in main.spec, Change "datas=[]" to "datas=[('ressources/*','ressources')]"
+pyinstaller main.spec

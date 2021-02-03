@@ -236,6 +236,9 @@ class Sudoku:
             col = i%self.taille
             if self.grilleDeJeu[row][col] == self.grille[row][col]:
                 if self.cases[i].grilleValeur == ' ':
+                    self.cases[i].indices = []
+                    self.cases[i].clickState = False
+                    self.cases[i].rightClickState = False
                     self.cases[i].grilleValeur = self.grilleDeJeu[row][col]
                     self.cases[i].setText(self.font.render(self.grilleDeJeu[row][col], True,(20,200,20)))
 #====================== Méthode d'affichage console de la grille pour le dev ===========================#
@@ -288,6 +291,7 @@ class Sudoku:
                 if case.clickState:
                     for case2 in self.cases :
                         case2.rightClickState = False
+                    
                     pygame.draw.rect(case.texture,(255,120,120,255),(1,1,38,38),width=1)
                     if event.type == pygame.KEYDOWN:
                         if pygame.key.name(event.key) in self.buttonList:
@@ -321,7 +325,8 @@ class Sudoku:
     def loadMenu(self):
         root = Tk()
         root.withdraw()
-        return self.load(filedialog.askopenfilename(initialdir = "./saves/", filetypes=(("Fichier Grille", ".sudoku"), ('Tout Fichier', "*.*"))))
+        path = str(getcwd()+'\\saves\\')
+        return self.load(filedialog.askopenfilename(initialdir = path, filetypes=(("Fichier Grille", ".sudoku"), ('Tout Fichier', "*.*"))))
         
     def load(self, path):
         try:

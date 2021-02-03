@@ -40,6 +40,10 @@ class case(element):
         super().event(event)
         if self.clickable:
             if event.type == pygame.MOUSEBUTTONUP:
+                if event.button == 1:
+                    if self.grilleValeur == ' ':
+                        if self.texture_rect.collidepoint(event.pos):
+                            self.rightClickState = False
                 if event.button == 3:
                     if self.grilleValeur == ' ':
                         if self.texture_rect.collidepoint(event.pos):
@@ -62,3 +66,5 @@ class case(element):
                         else:
                             if pygame.key.name(event.key).upper() not in self.indices:
                                 self.ajouterIndice(pygame.key.name(event.key).upper())
+        else:
+            pygame.draw.rect(self.texture,(0,0,0,0),(1,1,38,38),width=1)

@@ -1,7 +1,18 @@
 import pygame
 
 #====================== Class Element - Conteneur d'élément type de l'application ===========================#
+import sys
+import os
 
+def resource_path(relative_path):
+    try:
+    # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+    
 class element:
     def __init__(self,pos_x,pos_y,textureName=None):
         self.alphaClickable = True
@@ -17,7 +28,7 @@ class element:
         self.texture = None
         self.centerText = True
         if textureName is not None:
-            self.texture = pygame.image.load("ressources/" + textureName)
+            self.texture = pygame.image.load(resource_path("ressources/" + textureName))
             self.texture_rect = self.texture.get_rect()
             self.texture_rect.x = pos_x
             self.texture_rect.y = pos_y
